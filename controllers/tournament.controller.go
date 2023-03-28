@@ -313,11 +313,6 @@ func GetAllTournaments(c *fiber.Ctx) error {
 	if err != nil {
 		return MessageResponse(c, fiber.StatusBadRequest, "Failed to get tournaments")
 	}
-
-	if tournamentResponse.TournamentCount == 0 {
-		return MessageResponse(c, fiber.StatusMovedPermanently, "There is no page")
-	}
-
 	return c.Status(fiber.StatusOK).JSON(tournamentResponse)
 }
 
