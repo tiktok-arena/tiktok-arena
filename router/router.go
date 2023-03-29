@@ -33,6 +33,7 @@ func SetupRoutes(app *fiber.App) {
 	})
 
 	api.Route("/user", func(router fiber.Router) {
+		router.Post("/photo", middleware.Protected(), controllers.ChangeUserPhoto)
 		router.Get("/tournaments", middleware.Protected(), controllers.TournamentsOfUser)
 	})
 }

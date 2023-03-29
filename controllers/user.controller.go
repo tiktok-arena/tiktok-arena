@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
@@ -40,6 +41,42 @@ func TournamentsOfUser(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(tournamentResponse)
+}
+
+// ChangeUserPhoto
+//
+//	@Summary		Change user photo
+//	@Description	Change user photo for current user
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Security		ApiKeyAuth
+//	@Param			payload	body		models.ChangePhotoURL	true	"Data to change photo"
+//	@Success		200		{object}	MessageResponseType		"Photo edited"
+//	@Failure		400		{object}	MessageResponseType		"Error during photo change"
+//	@Router			/user/photo [post]
+func ChangeUserPhoto(c *fiber.Ctx) error {
+	userId, err := GetUserIdAndCheckJWT(c)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+	var payload *models.ChangePhotoURL
+	err = c.BodyParser(&payload)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+
+	err = models.ValidateStruct(payload)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+
+	err = database.ChangeUserPhoto(payload.PhotoURL, userId)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+	return MessageResponse(c, fiber.StatusOK,
+		fmt.Sprintf("Successfully changed photo"))
 }
 
 func GetUserIdAndCheckJWT(c *fiber.Ctx) (uuid.UUID, error) {

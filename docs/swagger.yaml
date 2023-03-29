@@ -24,6 +24,13 @@ definitions:
           $ref: '#/definitions/models.Round'
         type: array
     type: object
+  models.ChangePhotoURL:
+    properties:
+      photoURL:
+        type: string
+    required:
+    - photoURL
+    type: object
   models.CreateTiktok:
     properties:
       name:
@@ -38,21 +45,7 @@ definitions:
     properties:
       name:
         type: string
-      size:
-        maximum: 64
-        minimum: 4
-        type: integer
-      tiktoks:
-        items:
-          $ref: '#/definitions/models.CreateTiktok'
-        type: array
-    required:
-    - name
-    - tiktoks
-    type: object
-  models.EditTournament:
-    properties:
-      name:
+      photoURL:
         type: string
       size:
         maximum: 64
@@ -64,6 +57,26 @@ definitions:
         type: array
     required:
     - name
+    - photoURL
+    - tiktoks
+    type: object
+  models.EditTournament:
+    properties:
+      name:
+        type: string
+      photoURL:
+        type: string
+      size:
+        maximum: 64
+        minimum: 4
+        type: integer
+      tiktoks:
+        items:
+          $ref: '#/definitions/models.CreateTiktok'
+        type: array
+    required:
+    - name
+    - photoURL
     - tiktoks
     type: object
   models.Match:
@@ -100,6 +113,8 @@ definitions:
       id:
         type: string
       name:
+        type: string
+      photoURL:
         type: string
       size:
         type: integer
@@ -138,6 +153,8 @@ definitions:
       name:
         type: string
       password:
+        type: string
+      photoURL:
         type: string
     type: object
   models.UserAuthDetails:
@@ -484,6 +501,34 @@ paths:
       summary: Tournament tiktoks
       tags:
       - tournament
+  /user/photo:
+    post:
+      consumes:
+      - application/json
+      description: Change user photo for current user
+      parameters:
+      - description: Data to change photo
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.ChangePhotoURL'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Photo edited
+          schema:
+            $ref: '#/definitions/controllers.MessageResponseType'
+        "400":
+          description: Error during photo change
+          schema:
+            $ref: '#/definitions/controllers.MessageResponseType'
+      security:
+      - ApiKeyAuth: []
+      summary: Change user photo
+      tags:
+      - user
   /user/tournaments:
     get:
       consumes:

@@ -56,10 +56,11 @@ func CreateTournament(c *fiber.Ctx) error {
 	}
 
 	newTournament := models.Tournament{
-		ID:     &newTournamentId,
-		Name:   payload.Name,
-		UserID: &userId,
-		Size:   payload.Size,
+		ID:       &newTournamentId,
+		Name:     payload.Name,
+		UserID:   &userId,
+		Size:     payload.Size,
+		PhotoURL: payload.PhotoURL,
 	}
 	err = database.CreateNewTournament(&newTournament)
 	if err != nil {
@@ -144,10 +145,11 @@ func EditTournament(c *fiber.Ctx) error {
 	oldS, err := database.GetTournamentTiktoksById(tournamentId)
 
 	editedTournament := models.Tournament{
-		ID:     &tournamentId,
-		Name:   payload.Name,
-		UserID: &userId,
-		Size:   payload.Size,
+		ID:       &tournamentId,
+		Name:     payload.Name,
+		UserID:   &userId,
+		Size:     payload.Size,
+		PhotoURL: payload.PhotoURL,
 	}
 
 	err = database.EditTournament(&editedTournament)
@@ -302,7 +304,7 @@ func DeleteTournaments(c *fiber.Ctx) error {
 //	@Param			search				query		string						false	"search"
 //	@Success		200					{array}		models.TournamentsResponse	"Contest bracket"
 //	@Failure		400					{object}	MessageResponseType			"Failed to return tournament contest"
-//	@Router			/tournament [get]																																																																												[get]
+//	@Router			/tournament [get]																																																																																												[get]
 func GetAllTournaments(c *fiber.Ctx) error {
 	p := new(models.PaginationQueries)
 	if err := c.QueryParser(p); err != nil {

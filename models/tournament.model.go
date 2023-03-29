@@ -11,7 +11,7 @@ type Tournament struct {
 	TimesPlayed int        `gorm:"not null"`
 	UserID      *uuid.UUID `gorm:"not null"`
 	User        *User      `gorm:"foreignKey:UserID"`
-	PhotoURL    string
+	PhotoURL    string     `gorm:"not null;default:null"`
 }
 
 type TournamentsResponse struct {
@@ -28,15 +28,17 @@ type TournamentIds struct {
 }
 
 type CreateTournament struct {
-	Name    string         `validate:"required"`
-	Size    int            `validate:"gte=4,lte=64"`
-	Tiktoks []CreateTiktok `validate:"required"`
+	Name     string         `validate:"required"`
+	PhotoURL string         `validate:"required"`
+	Size     int            `validate:"gte=4,lte=64"`
+	Tiktoks  []CreateTiktok `validate:"required"`
 }
 
 type EditTournament struct {
-	Name    string         `validate:"required"`
-	Size    int            `validate:"gte=4,lte=64"`
-	Tiktoks []CreateTiktok `validate:"required"`
+	Name     string         `validate:"required"`
+	PhotoURL string         `validate:"required"`
+	Size     int            `validate:"gte=4,lte=64"`
+	Tiktoks  []CreateTiktok `validate:"required"`
 }
 
 type Bracket struct {

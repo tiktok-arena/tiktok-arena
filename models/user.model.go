@@ -11,6 +11,10 @@ type User struct {
 	PhotoURL string
 }
 
+type ChangePhotoURL struct {
+	PhotoURL string `validate:"required"`
+}
+
 type AuthInput struct {
 	Name     string `validate:"required"`
 	Password string `validate:"required"`

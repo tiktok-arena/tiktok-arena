@@ -528,6 +528,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/photo": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Change user photo for current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Change user photo",
+                "parameters": [
+                    {
+                        "description": "Data to change photo",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ChangePhotoURL"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Photo edited",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.MessageResponseType"
+                        }
+                    },
+                    "400": {
+                        "description": "Error during photo change",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.MessageResponseType"
+                        }
+                    }
+                }
+            }
+        },
         "/user/tournaments": {
             "get": {
                 "security": [
@@ -633,6 +678,17 @@ const docTemplate = `{
                 }
             }
         },
+        "models.ChangePhotoURL": {
+            "type": "object",
+            "required": [
+                "photoURL"
+            ],
+            "properties": {
+                "photoURL": {
+                    "type": "string"
+                }
+            }
+        },
         "models.CreateTiktok": {
             "type": "object",
             "required": [
@@ -652,10 +708,14 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "name",
+                "photoURL",
                 "tiktoks"
             ],
             "properties": {
                 "name": {
+                    "type": "string"
+                },
+                "photoURL": {
                     "type": "string"
                 },
                 "size": {
@@ -675,10 +735,14 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "name",
+                "photoURL",
                 "tiktoks"
             ],
             "properties": {
                 "name": {
+                    "type": "string"
+                },
+                "photoURL": {
                     "type": "string"
                 },
                 "size": {
@@ -747,6 +811,9 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "photoURL": {
+                    "type": "string"
+                },
                 "size": {
                     "type": "integer"
                 },
@@ -803,6 +870,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "photoURL": {
                     "type": "string"
                 }
             }

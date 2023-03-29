@@ -214,3 +214,8 @@ func RegisterTiktokWinner(tournamentId uuid.UUID, tiktokURL string) error {
 		UpdateColumn("times_played", gorm.Expr("times_played + ?", 1))
 	return record.Error
 }
+
+func ChangeUserPhoto(url string, id uuid.UUID) error {
+	record := DB.Table("users").Where("id = ?", id).Update("photo_url", url)
+	return record.Error
+}
