@@ -11,7 +11,7 @@ type Tournament struct {
 	TimesPlayed int        `gorm:"not null"`
 	UserID      *uuid.UUID `gorm:"not null"`
 	User        *User      `gorm:"foreignKey:UserID"`
-	PhotoURL    string     `gorm:"not null;default:null"`
+	PhotoURL    string
 }
 
 type TournamentsResponse struct {
