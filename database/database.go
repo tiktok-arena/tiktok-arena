@@ -98,7 +98,7 @@ func CreateNewTournament(newTournament *models.Tournament) error {
 
 func EditTournament(t *models.Tournament) error {
 	record := DB.Table("tournaments").Where("id = ?", &t.ID).
-		Updates(map[string]interface{}{"id": &t.ID, "name": &t.Name, "size": &t.Size})
+		Updates(map[string]interface{}{"id": &t.ID, "name": &t.Name, "size": &t.Size, "photo_url": &t.PhotoURL})
 	return record.Error
 }
 
