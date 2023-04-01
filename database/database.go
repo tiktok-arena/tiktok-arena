@@ -222,6 +222,6 @@ func ChangeUserPhoto(url string, id uuid.UUID) error {
 
 func GetUserPhoto(id string) (string, error) {
 	var url string
-	record := DB.Table("users").Select("photo_url").Find(&url)
+	record := DB.Table("users").Where("id = ?", id).Select("photo_url").Find(&url)
 	return url, record.Error
 }

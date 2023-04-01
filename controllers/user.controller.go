@@ -11,8 +11,8 @@ import (
 
 // TournamentsOfUser
 //
-//	@Summary		Create new tournament
-//	@Description	Create new tournament for current user
+//	@Summary		Get tournaments for user
+//	@Description	Get tournaments for user
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
@@ -54,7 +54,7 @@ func TournamentsOfUser(c *fiber.Ctx) error {
 //	@Param			payload	body		models.ChangePhotoURL	true	"Data to change photo"
 //	@Success		200		{object}	MessageResponseType		"Photo edited"
 //	@Failure		400		{object}	MessageResponseType		"Error during photo change"
-//	@Router			/user/photo [post]
+//	@Router			/user/photo [put]
 func ChangeUserPhoto(c *fiber.Ctx) error {
 	userId, err := GetUserIdAndCheckJWT(c)
 	if err != nil {

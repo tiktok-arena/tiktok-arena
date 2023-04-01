@@ -362,7 +362,7 @@ const docTemplate = `{
             }
         },
         "/tournament/edit/{tournamentId}": {
-            "post": {
+            "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -484,7 +484,7 @@ const docTemplate = `{
                     }
                 }
             },
-            "post": {
+            "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -529,7 +529,7 @@ const docTemplate = `{
             }
         },
         "/user/photo": {
-            "post": {
+            "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -580,7 +580,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Create new tournament for current user",
+                "description": "Get tournaments for user",
                 "consumes": [
                     "application/json"
                 ],
@@ -590,7 +590,7 @@ const docTemplate = `{
                 "tags": [
                     "user"
                 ],
-                "summary": "Create new tournament",
+                "summary": "Get tournaments for user",
                 "parameters": [
                     {
                         "type": "string",

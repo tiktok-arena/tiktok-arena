@@ -324,7 +324,7 @@ paths:
       summary: Tournament details
       tags:
       - tournament
-    post:
+    put:
       consumes:
       - application/json
       description: Increment wins and increment times_played
@@ -458,7 +458,7 @@ paths:
       tags:
       - tournament
   /tournament/edit/{tournamentId}:
-    post:
+    put:
       consumes:
       - application/json
       description: Edit tournament for current user
@@ -513,7 +513,7 @@ paths:
       tags:
       - tournament
   /user/photo:
-    post:
+    put:
       consumes:
       - application/json
       description: Change user photo for current user
@@ -544,7 +544,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Create new tournament for current user
+      description: Get tournaments for user
       parameters:
       - description: page number
         in: query
@@ -579,7 +579,7 @@ paths:
             $ref: '#/definitions/controllers.MessageResponseType'
       security:
       - ApiKeyAuth: []
-      summary: Create new tournament
+      summary: Get tournaments for user
       tags:
       - user
 swagger: "2.0"

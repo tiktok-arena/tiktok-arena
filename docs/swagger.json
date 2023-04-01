@@ -356,7 +356,7 @@
             }
         },
         "/tournament/edit/{tournamentId}": {
-            "post": {
+            "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -478,7 +478,7 @@
                     }
                 }
             },
-            "post": {
+            "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -523,7 +523,7 @@
             }
         },
         "/user/photo": {
-            "post": {
+            "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -574,7 +574,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Create new tournament for current user",
+                "description": "Get tournaments for user",
                 "consumes": [
                     "application/json"
                 ],
@@ -584,7 +584,7 @@
                 "tags": [
                     "user"
                 ],
-                "summary": "Create new tournament",
+                "summary": "Get tournaments for user",
                 "parameters": [
                     {
                         "type": "string",

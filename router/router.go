@@ -24,16 +24,16 @@ func SetupRoutes(app *fiber.App) {
 		router.Get("", controllers.GetAllTournaments)
 		router.Get("/contest/:tournamentId", controllers.GetTournamentContest)
 		router.Post("/create", middleware.Protected(), controllers.CreateTournament)
-		router.Post("/edit/:tournamentId", middleware.Protected(), controllers.EditTournament)
+		router.Put("/edit/:tournamentId", middleware.Protected(), controllers.EditTournament)
 		router.Delete("/delete/:tournamentId", middleware.Protected(), controllers.DeleteTournament)
 		router.Delete("/delete", middleware.Protected(), controllers.DeleteTournaments)
 		router.Get("/tiktoks/:tournamentId", controllers.GetTournamentTiktoks)
 		router.Get("/:tournamentId", controllers.GetTournamentDetails)
-		router.Post("/:tournamentId", controllers.TournamentWinner)
+		router.Put("/:tournamentId", controllers.TournamentWinner)
 	})
 
 	api.Route("/user", func(router fiber.Router) {
-		router.Post("/photo", middleware.Protected(), controllers.ChangeUserPhoto)
+		router.Put("/photo", middleware.Protected(), controllers.ChangeUserPhoto)
 		router.Get("/tournaments", middleware.Protected(), controllers.TournamentsOfUser)
 	})
 }

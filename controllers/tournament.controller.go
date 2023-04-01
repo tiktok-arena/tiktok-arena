@@ -95,7 +95,7 @@ func CreateTournament(c *fiber.Ctx) error {
 //	@Param			payload	body		models.EditTournament	true	"Data to edit tournament"
 //	@Success		200		{object}	MessageResponseType		"Tournament edited"
 //	@Failure		400		{object}	MessageResponseType		"Error during tournament edition"
-//	@Router			/tournament/edit/{tournamentId} [post]
+//	@Router			/tournament/edit/{tournamentId} [put]
 func EditTournament(c *fiber.Ctx) error {
 	userId, err := GetUserIdAndCheckJWT(c)
 
@@ -304,7 +304,7 @@ func DeleteTournaments(c *fiber.Ctx) error {
 //	@Param			search				query		string						false	"search"
 //	@Success		200					{array}		models.TournamentsResponse	"Contest bracket"
 //	@Failure		400					{object}	MessageResponseType			"Failed to return tournament contest"
-//	@Router			/tournament [get]																																																																																																				[get]
+//	@Router			/tournament [get]																																																																																																																				[get]
 func GetAllTournaments(c *fiber.Ctx) error {
 	p := new(models.PaginationQueries)
 	if err := c.QueryParser(p); err != nil {
@@ -382,7 +382,7 @@ func GetTournamentTiktoks(c *fiber.Ctx) error {
 //	@Param			payload	body		models.CreateTournament	true	"Data to update tournament winner"
 //	@Success		200		{object}	MessageResponseType		"Winner updated"
 //	@Failure		400		{object}	MessageResponseType		"Error during winner updating"
-//	@Router			/tournament/{tournamentId} [post]
+//	@Router			/tournament/{tournamentId} [put]
 func TournamentWinner(c *fiber.Ctx) error {
 	_, err := GetUserIdAndCheckJWT(c)
 
