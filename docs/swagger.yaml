@@ -166,6 +166,17 @@ definitions:
       username:
         type: string
     type: object
+  models.WhoAmI:
+    properties:
+      id:
+        type: string
+      photoURL:
+        type: string
+      token:
+        type: string
+      username:
+        type: string
+    type: object
 host: localhost:8000
 info:
   contact: {}
@@ -236,7 +247,7 @@ paths:
         "200":
           description: User details
           schema:
-            $ref: '#/definitions/models.UserAuthDetails'
+            $ref: '#/definitions/models.WhoAmI'
         "400":
           description: Error getting user data
           schema:

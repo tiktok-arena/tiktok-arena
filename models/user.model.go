@@ -25,3 +25,10 @@ type UserAuthDetails struct {
 	Username string
 	Token    string
 }
+
+type WhoAmI struct {
+	ID       string
+	Username string
+	Token    string
+	PhotoURL string
+}

@@ -117,7 +117,7 @@ const docTemplate = `{
                     "200": {
                         "description": "User details",
                         "schema": {
-                            "$ref": "#/definitions/models.UserAuthDetails"
+                            "$ref": "#/definitions/models.WhoAmI"
                         }
                     },
                     "400": {
@@ -881,6 +881,23 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.WhoAmI": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "photoURL": {
                     "type": "string"
                 },
                 "token": {

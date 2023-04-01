@@ -151,8 +151,8 @@ func UserJwtToken(user *models.User) (string, error) {
 //	@Accept			json
 //	@Produce		json
 //	@Security		ApiKeyAuth
-//	@Success		200	{object}	models.UserAuthDetails	"User details"
-//	@Failure		400	{object}	MessageResponseType		"Error getting user data"
+//	@Success		200	{object}	models.WhoAmI		"User details"
+//	@Failure		400	{object}	MessageResponseType	"Error getting user data"
 //	@Router			/auth/whoami [get]
 func WhoAmI(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
@@ -164,10 +164,15 @@ func WhoAmI(c *fiber.Ctx) error {
 	if !database.UserExists(username) {
 		return MessageResponse(c, fiber.StatusUnauthorized, "There is no user")
 	}
+	url, err := database.GetUserPhoto(id)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, "Failed to get user photo url")
+	}
 
-	return c.Status(fiber.StatusOK).JSON(models.UserAuthDetails{
+	return c.Status(fiber.StatusOK).JSON(models.WhoAmI{
 		ID:       id,
 		Username: username,
 		Token:    token.Raw,
+		PhotoURL: url,
 	})
 }

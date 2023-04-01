@@ -98,7 +98,7 @@ func CreateNewTournament(newTournament *models.Tournament) error {
 
 func EditTournament(t *models.Tournament) error {
 	record := DB.Table("tournaments").Where("id = ?", &t.ID).
-		Updates(map[string]interface{}{"id": &t.ID, "name": &t.Name, "size": &t.Size, "photo_url": &t.PhotoURL})
+		Updates(t)
 	return record.Error
 }
 
@@ -218,4 +218,10 @@ func RegisterTiktokWinner(tournamentId uuid.UUID, tiktokURL string) error {
 func ChangeUserPhoto(url string, id uuid.UUID) error {
 	record := DB.Table("users").Where("id = ?", id).Update("photo_url", url)
 	return record.Error
+}
+
+func GetUserPhoto(id string) (string, error) {
+	var url string
+	record := DB.Table("users").Select("photo_url").Find(&url)
+	return url, record.Error
 }

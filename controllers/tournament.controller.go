@@ -304,7 +304,7 @@ func DeleteTournaments(c *fiber.Ctx) error {
 //	@Param			search				query		string						false	"search"
 //	@Success		200					{array}		models.TournamentsResponse	"Contest bracket"
 //	@Failure		400					{object}	MessageResponseType			"Failed to return tournament contest"
-//	@Router			/tournament [get]																																																																																												[get]
+//	@Router			/tournament [get]																																																																																																				[get]
 func GetAllTournaments(c *fiber.Ctx) error {
 	p := new(models.PaginationQueries)
 	if err := c.QueryParser(p); err != nil {
