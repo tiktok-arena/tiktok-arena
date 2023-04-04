@@ -35,7 +35,11 @@ func TournamentsOfUser(c *fiber.Ctx) error {
 		return MessageResponse(c, fiber.StatusBadRequest, "Failed to parse queries")
 	}
 	models.ValidatePaginationQueries(p)
-	tournamentResponse, err := database.GetAllTournamentsForUserById(userId, *p)
+	countTournamentsForUser, err := database.TotalTournamentsByUserId(userId)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, "Failed to count tournaments")
+	}
+	tournamentResponse, err := database.GetAllTournamentsForUserById(userId, countTournamentsForUser, *p)
 	if err != nil {
 		return MessageResponse(c, fiber.StatusBadRequest, "Failed to get tournaments")
 	}

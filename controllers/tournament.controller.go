@@ -45,7 +45,11 @@ func CreateTournament(c *fiber.Ctx) error {
 		)
 	}
 
-	if database.CheckIfTournamentExistsByName(payload.Name) {
+	tournamentExists, err := database.CheckIfTournamentExistsByName(payload.Name)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+	if tournamentExists {
 		return MessageResponse(c, fiber.StatusBadRequest,
 			fmt.Sprintf("Tournament %s already exists", payload.Name))
 	}
@@ -132,12 +136,20 @@ func EditTournament(c *fiber.Ctx) error {
 			fmt.Sprintf("Could not parse id %s", tournamentIdString))
 	}
 
-	if !database.CheckIfTournamentExistsById(tournamentId) {
+	exists, err := database.CheckIfTournamentExistsById(tournamentId)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+	if !exists {
 		return MessageResponse(c, fiber.StatusBadRequest,
 			fmt.Sprintf("Tournament with id:%s doesn't exist", tournamentIdString))
 	}
 
-	if database.CheckIfNameIsTakenByOtherTournament(payload.Name, tournamentId) {
+	nameIsTakenByOtherTournament, err := database.CheckIfNameIsTakenByOtherTournament(payload.Name, tournamentId)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+	if nameIsTakenByOtherTournament {
 		return MessageResponse(c, fiber.StatusBadRequest,
 			fmt.Sprintf("Tournament name:%s is taken by other tournament", payload.Name))
 	}
@@ -223,7 +235,11 @@ func DeleteTournament(c *fiber.Ctx) error {
 			fmt.Sprintf("Could not parse id %s", tournamentIdString))
 	}
 
-	if !database.CheckIfTournamentExistsById(tournamentId) {
+	exists, err := database.CheckIfTournamentExistsById(tournamentId)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+	if !exists {
 		return MessageResponse(c, fiber.StatusBadRequest,
 			fmt.Sprintf("Tournament with id:%s doesn't exist", tournamentIdString))
 	}
@@ -311,7 +327,8 @@ func GetAllTournaments(c *fiber.Ctx) error {
 		return MessageResponse(c, fiber.StatusBadRequest, "Failed to parse queries")
 	}
 	models.ValidatePaginationQueries(p)
-	tournamentResponse, err := database.GetTournaments(*p)
+	countTournaments, err := database.TotalTournaments()
+	tournamentResponse, err := database.GetTournaments(countTournaments, *p)
 	if err != nil {
 		return MessageResponse(c, fiber.StatusBadRequest, "Failed to get tournaments")
 	}
@@ -411,7 +428,16 @@ func TournamentWinner(c *fiber.Ctx) error {
 		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
 	}
 
-	err = database.RegisterTiktokWinner(tournamentId, payload.TiktokURL)
+	if payload.TiktokURL == "" {
+		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+
+	err = database.UpdateTournamentTimesPlayed(tournamentId)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+
+	err = database.UpdateTiktokWins(tournamentId, payload.TiktokURL)
 	if err != nil {
 		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
 	}

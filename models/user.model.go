@@ -20,10 +20,17 @@ type AuthInput struct {
 	Password string `validate:"required"`
 }
 
-type UserAuthDetails struct {
+type RegisterDetails struct {
 	ID       string
 	Username string
 	Token    string
+}
+
+type LoginDetails struct {
+	ID       string
+	Username string
+	Token    string
+	PhotoURL string
 }
 
 type WhoAmI struct {

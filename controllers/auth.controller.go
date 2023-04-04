@@ -19,7 +19,7 @@ import (
 //	@Accept			json
 //	@Produce		json
 //	@Param			payload			body		models.AuthInput		true	"Data to register user"
-//	@Success		200				{object}	models.UserAuthDetails	"Register success"
+//	@Success		200				{object}	models.RegisterDetails	"Register success"
 //	@Failure		400				{object}	MessageResponseType		"Failed to register user"
 //	@Router			/auth/register	[post]
 func RegisterUser(c *fiber.Ctx) error {
@@ -41,7 +41,11 @@ func RegisterUser(c *fiber.Ctx) error {
 		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
 	}
 
-	if database.UserExists(payload.Name) {
+	exists, err := database.UserExists(payload.Name)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+	if exists {
 		return MessageResponse(c, fiber.StatusBadRequest,
 			fmt.Sprintf("User %s already exists", payload.Name))
 	}
@@ -65,7 +69,7 @@ func RegisterUser(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(
-		models.UserAuthDetails{
+		models.RegisterDetails{
 			ID:       newUser.ID.String(),
 			Username: newUser.Name,
 			Token:    token,
@@ -81,7 +85,7 @@ func RegisterUser(c *fiber.Ctx) error {
 //	@Accept			json
 //	@Produce		json
 //	@Param			payload			body		models.AuthInput		true	"Data to login user"
-//	@Success		200				{object}	models.UserAuthDetails	"Login success"
+//	@Success		200				{object}	models.RegisterDetails	"Login success"
 //	@Failure		400				{object}	MessageResponseType		"Error logging in"
 //	@Router			/auth/login    	[post]
 func LoginUser(c *fiber.Ctx) error {
@@ -114,11 +118,17 @@ func LoginUser(c *fiber.Ctx) error {
 			fmt.Sprintf("Generating JWT Token failed: %v", err))
 	}
 
+	url, err := database.GetUserPhoto(user.ID.String())
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, "Failed to get user photo url")
+	}
+
 	return c.Status(fiber.StatusOK).JSON(
-		models.UserAuthDetails{
+		models.LoginDetails{
 			ID:       user.ID.String(),
 			Username: user.Name,
 			Token:    token,
+			PhotoURL: url,
 		},
 	)
 }
@@ -161,7 +171,11 @@ func WhoAmI(c *fiber.Ctx) error {
 	username := claims["name"].(string)
 	id := claims["sub"].(string)
 
-	if !database.UserExists(username) {
+	exists, err := database.UserExists(username)
+	if err != nil {
+		return MessageResponse(c, fiber.StatusBadRequest, err.Error())
+	}
+	if !exists {
 		return MessageResponse(c, fiber.StatusUnauthorized, "There is no user")
 	}
 	url, err := database.GetUserPhoto(id)
