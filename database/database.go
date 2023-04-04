@@ -37,13 +37,18 @@ func ConnectDB(config *configuration.EnvConfigModel) {
 	if err != nil {
 		log.Fatal("Migration Failed:\n", err.Error())
 	}
+
+	tiktoksTable = DB.Table("tiktoks")
+	tournamentsTable = DB.Table("tournaments")
+	usersTable = DB.Table("users")
+
 	log.Println("Successfully connected to the database")
 }
 
 var (
-	tiktokTable      = DB.Table("tiktoks")
-	tournamentsTable = DB.Table("tournaments")
-	usersTable       = DB.Table("users")
+	tiktoksTable     *gorm.DB
+	tournamentsTable *gorm.DB
+	usersTable       *gorm.DB
 )
 
 // Scopes for search and pagination
