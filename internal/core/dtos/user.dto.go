@@ -1,15 +1,6 @@
-package models
+package dtos
 
-import (
-	"github.com/google/uuid"
-)
-
-type User struct {
-	ID       *uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key"`
-	Name     string     `gorm:"not null;default:null"`
-	Password string     `gorm:"not null;default:null"`
-	PhotoURL string
-}
+import "github.com/google/uuid"
 
 type ChangePhotoURL struct {
 	PhotoURL string `validate:"required"`
@@ -21,7 +12,7 @@ type AuthInput struct {
 }
 
 type RegisterDetails struct {
-	ID       string
+	ID       *uuid.UUID
 	Username string
 	Token    string
 }

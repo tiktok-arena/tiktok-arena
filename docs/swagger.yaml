@@ -1,11 +1,5 @@
-basePath: /api
 definitions:
-  controllers.MessageResponseType:
-    properties:
-      message:
-        type: string
-    type: object
-  models.AuthInput:
+  dtos.AuthInput:
     properties:
       name:
         type: string
@@ -15,23 +9,23 @@ definitions:
     - name
     - password
     type: object
-  models.Bracket:
+  dtos.Bracket:
     properties:
       countMatches:
         type: integer
       rounds:
         items:
-          $ref: '#/definitions/models.Round'
+          $ref: '#/definitions/dtos.Round'
         type: array
     type: object
-  models.ChangePhotoURL:
+  dtos.ChangePhotoURL:
     properties:
       photoURL:
         type: string
     required:
     - photoURL
     type: object
-  models.CreateTiktok:
+  dtos.CreateTiktok:
     properties:
       name:
         type: string
@@ -41,7 +35,7 @@ definitions:
     - name
     - url
     type: object
-  models.CreateTournament:
+  dtos.CreateTournament:
     properties:
       name:
         type: string
@@ -53,14 +47,14 @@ definitions:
         type: integer
       tiktoks:
         items:
-          $ref: '#/definitions/models.CreateTiktok'
+          $ref: '#/definitions/dtos.CreateTiktok'
         type: array
     required:
     - name
     - photoURL
     - tiktoks
     type: object
-  models.EditTournament:
+  dtos.EditTournament:
     properties:
       name:
         type: string
@@ -72,28 +66,74 @@ definitions:
         type: integer
       tiktoks:
         items:
-          $ref: '#/definitions/models.CreateTiktok'
+          $ref: '#/definitions/dtos.CreateTiktok'
         type: array
     required:
     - name
     - photoURL
     - tiktoks
     type: object
-  models.Match:
+  dtos.Match:
     properties:
       firstOption: {}
       matchID:
         type: string
       secondOption: {}
     type: object
-  models.Round:
+  dtos.MessageResponseType:
+    properties:
+      message:
+        type: string
+    type: object
+  dtos.RegisterDetails:
+    properties:
+      id:
+        type: string
+      token:
+        type: string
+      username:
+        type: string
+    type: object
+  dtos.Round:
     properties:
       matches:
         items:
-          $ref: '#/definitions/models.Match'
+          $ref: '#/definitions/dtos.Match'
         type: array
       round:
         type: integer
+    type: object
+  dtos.TournamentIds:
+    properties:
+      tournamentIds:
+        items:
+          type: string
+        type: array
+    required:
+    - tournamentIds
+    type: object
+  dtos.TournamentsResponse:
+    properties:
+      tournamentCount:
+        type: integer
+      tournaments:
+        items:
+          $ref: '#/definitions/models.Tournament'
+        type: array
+    required:
+    - tournamentCount
+    - tournaments
+    type: object
+  dtos.WhoAmI:
+    properties:
+      id:
+        type: string
+      photoURL:
+        type: string
+      token:
+        type: string
+      username:
+        type: string
     type: object
   models.Tiktok:
     properties:
@@ -125,27 +165,6 @@ definitions:
       userID:
         type: string
     type: object
-  models.TournamentIds:
-    properties:
-      tournamentIds:
-        items:
-          type: string
-        type: array
-    required:
-    - tournamentIds
-    type: object
-  models.TournamentsResponse:
-    properties:
-      tournamentCount:
-        type: integer
-      tournaments:
-        items:
-          $ref: '#/definitions/models.Tournament'
-        type: array
-    required:
-    - tournamentCount
-    - tournaments
-    type: object
   models.User:
     properties:
       id:
@@ -157,32 +176,8 @@ definitions:
       photoURL:
         type: string
     type: object
-  models.UserAuthDetails:
-    properties:
-      id:
-        type: string
-      token:
-        type: string
-      username:
-        type: string
-    type: object
-  models.WhoAmI:
-    properties:
-      id:
-        type: string
-      photoURL:
-        type: string
-      token:
-        type: string
-      username:
-        type: string
-    type: object
-host: localhost:8000
 info:
   contact: {}
-  description: API for TikTok arena application
-  title: TikTok arena API
-  version: "1.0"
 paths:
   /auth/login:
     post:
@@ -195,18 +190,18 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/models.AuthInput'
+          $ref: '#/definitions/dtos.AuthInput'
       produces:
       - application/json
       responses:
         "200":
           description: Login success
           schema:
-            $ref: '#/definitions/models.UserAuthDetails'
+            $ref: '#/definitions/dtos.RegisterDetails'
         "400":
           description: Error logging in
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       summary: Login user
       tags:
       - auth
@@ -221,18 +216,18 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/models.AuthInput'
+          $ref: '#/definitions/dtos.AuthInput'
       produces:
       - application/json
       responses:
         "200":
           description: Register success
           schema:
-            $ref: '#/definitions/models.UserAuthDetails'
+            $ref: '#/definitions/dtos.RegisterDetails'
         "400":
           description: Failed to register user
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       summary: Register user
       tags:
       - auth
@@ -247,11 +242,11 @@ paths:
         "200":
           description: User details
           schema:
-            $ref: '#/definitions/models.WhoAmI'
+            $ref: '#/definitions/dtos.WhoAmI'
         "400":
           description: Error getting user data
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       security:
       - ApiKeyAuth: []
       summary: Authenticated user details
@@ -271,14 +266,6 @@ paths:
         in: query
         name: count
         type: string
-      - description: sort page by name
-        in: query
-        name: sort_name
-        type: string
-      - description: sort page by size
-        in: query
-        name: sort_size
-        type: string
       - description: search
         in: query
         name: search
@@ -290,12 +277,12 @@ paths:
           description: Contest bracket
           schema:
             items:
-              $ref: '#/definitions/models.TournamentsResponse'
+              $ref: '#/definitions/dtos.TournamentsResponse'
             type: array
         "400":
           description: Failed to return tournament contest
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       summary: All tournaments
       tags:
       - tournament
@@ -320,7 +307,7 @@ paths:
         "400":
           description: Tournament not found
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       summary: Tournament details
       tags:
       - tournament
@@ -334,18 +321,18 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/models.CreateTournament'
+          $ref: '#/definitions/dtos.CreateTournament'
       produces:
       - application/json
       responses:
         "200":
           description: Winner updated
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
         "400":
           description: Error during winner updating
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       security:
       - ApiKeyAuth: []
       summary: Update tournament winner statistics
@@ -372,11 +359,11 @@ paths:
         "200":
           description: Contest bracket
           schema:
-            $ref: '#/definitions/models.Bracket'
+            $ref: '#/definitions/dtos.Bracket'
         "400":
           description: Failed to return tournament contest
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       summary: Tournament contest
       tags:
       - tournament
@@ -391,18 +378,18 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/models.CreateTournament'
+          $ref: '#/definitions/dtos.CreateTournament'
       produces:
       - application/json
       responses:
         "200":
           description: Tournament created
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
         "400":
           description: Error during tournament creation
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       security:
       - ApiKeyAuth: []
       summary: Create new tournament
@@ -419,18 +406,18 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/models.TournamentIds'
+          $ref: '#/definitions/dtos.TournamentIds'
       produces:
       - application/json
       responses:
         "200":
           description: Tournaments deleted
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
         "400":
           description: Error during tournaments deletion
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       security:
       - ApiKeyAuth: []
       summary: Delete tournaments
@@ -447,11 +434,11 @@ paths:
         "200":
           description: Tournament deleted
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
         "400":
           description: Error during tournament deletion
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       security:
       - ApiKeyAuth: []
       summary: Delete tournament
@@ -468,18 +455,18 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/models.EditTournament'
+          $ref: '#/definitions/dtos.EditTournament'
       produces:
       - application/json
       responses:
         "200":
           description: Tournament edited
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
         "400":
           description: Error during tournament edition
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       security:
       - ApiKeyAuth: []
       summary: Edit tournament
@@ -508,7 +495,7 @@ paths:
         "400":
           description: Tournament not found
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       summary: Tournament tiktoks
       tags:
       - tournament
@@ -523,18 +510,18 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/models.ChangePhotoURL'
+          $ref: '#/definitions/dtos.ChangePhotoURL'
       produces:
       - application/json
       responses:
         "200":
           description: Photo edited
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
         "400":
           description: Error during photo change
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       security:
       - ApiKeyAuth: []
       summary: Change user photo
@@ -572,11 +559,11 @@ paths:
         "200":
           description: Tournaments of user
           schema:
-            $ref: '#/definitions/models.TournamentsResponse'
+            $ref: '#/definitions/dtos.TournamentsResponse'
         "400":
           description: Couldn't get tournaments for specific user
           schema:
-            $ref: '#/definitions/controllers.MessageResponseType'
+            $ref: '#/definitions/dtos.MessageResponseType'
       security:
       - ApiKeyAuth: []
       summary: Get tournaments for user

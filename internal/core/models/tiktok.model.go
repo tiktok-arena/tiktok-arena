@@ -1,13 +1,21 @@
-package controllers
+package models
 
 import (
+	"github.com/google/uuid"
 	"math/rand"
-	"tiktok-arena/models"
 	"time"
 )
 
-func findDifferenceOfTwoTiktokSlices(s1 []models.Tiktok, s2 []models.Tiktok) []models.Tiktok {
-	var dif []models.Tiktok
+type Tiktok struct {
+	TournamentID *uuid.UUID  `gorm:"not null;primaryKey;default:null"`
+	Tournament   *Tournament `gorm:"foreignKey:TournamentID"`
+	Name         string      `gorm:"not null;default:null"`
+	URL          string      `gorm:"not null;primaryKey;default:null"`
+	Wins         int
+}
+
+func FindDifferenceOfTwoTiktokSlices(s1 []Tiktok, s2 []Tiktok) []Tiktok {
+	var dif []Tiktok
 	for _, t1 := range s1 {
 		existsInS2 := false
 		for _, t2 := range s2 {
@@ -23,7 +31,7 @@ func findDifferenceOfTwoTiktokSlices(s1 []models.Tiktok, s2 []models.Tiktok) []m
 	return dif
 }
 
-func containsTiktok(slice []models.Tiktok, t models.Tiktok) bool {
+func ContainsTiktok(slice []Tiktok, t Tiktok) bool {
 	for _, item := range slice {
 		if item.TournamentID == t.TournamentID && item.URL == t.URL {
 			return true
@@ -32,7 +40,7 @@ func containsTiktok(slice []models.Tiktok, t models.Tiktok) bool {
 	return false
 }
 
-func shuffleTiktok(t []models.Tiktok) {
+func ShuffleTiktok(t []Tiktok) {
 	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(t), func(i, j int) { t[i], t[j] = t[j], t[i] })
 }

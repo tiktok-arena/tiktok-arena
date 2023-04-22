@@ -35,7 +35,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.AuthInput"
+                            "$ref": "#/definitions/dtos.AuthInput"
                         }
                     }
                 ],
@@ -43,13 +43,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Login success",
                         "schema": {
-                            "$ref": "#/definitions/models.UserAuthDetails"
+                            "$ref": "#/definitions/dtos.RegisterDetails"
                         }
                     },
                     "400": {
                         "description": "Error logging in",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -75,7 +75,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.AuthInput"
+                            "$ref": "#/definitions/dtos.AuthInput"
                         }
                     }
                 ],
@@ -83,13 +83,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Register success",
                         "schema": {
-                            "$ref": "#/definitions/models.UserAuthDetails"
+                            "$ref": "#/definitions/dtos.RegisterDetails"
                         }
                     },
                     "400": {
                         "description": "Failed to register user",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -117,13 +117,13 @@ const docTemplate = `{
                     "200": {
                         "description": "User details",
                         "schema": {
-                            "$ref": "#/definitions/models.WhoAmI"
+                            "$ref": "#/definitions/dtos.WhoAmI"
                         }
                     },
                     "400": {
                         "description": "Error getting user data",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -157,18 +157,6 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "sort page by name",
-                        "name": "sort_name",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "sort page by size",
-                        "name": "sort_size",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
                         "description": "search",
                         "name": "search",
                         "in": "query"
@@ -180,14 +168,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.TournamentsResponse"
+                                "$ref": "#/definitions/dtos.TournamentsResponse"
                             }
                         }
                     },
                     "400": {
                         "description": "Failed to return tournament contest",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -225,13 +213,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Contest bracket",
                         "schema": {
-                            "$ref": "#/definitions/models.Bracket"
+                            "$ref": "#/definitions/dtos.Bracket"
                         }
                     },
                     "400": {
                         "description": "Failed to return tournament contest",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -262,7 +250,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CreateTournament"
+                            "$ref": "#/definitions/dtos.CreateTournament"
                         }
                     }
                 ],
@@ -270,13 +258,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Tournament created",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     },
                     "400": {
                         "description": "Error during tournament creation",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -307,7 +295,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.TournamentIds"
+                            "$ref": "#/definitions/dtos.TournamentIds"
                         }
                     }
                 ],
@@ -315,13 +303,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Tournaments deleted",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     },
                     "400": {
                         "description": "Error during tournaments deletion",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -349,13 +337,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Tournament deleted",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     },
                     "400": {
                         "description": "Error during tournament deletion",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -386,7 +374,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.EditTournament"
+                            "$ref": "#/definitions/dtos.EditTournament"
                         }
                     }
                 ],
@@ -394,13 +382,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Tournament edited",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     },
                     "400": {
                         "description": "Error during tournament edition",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -441,7 +429,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Tournament not found",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -479,7 +467,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Tournament not found",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -508,7 +496,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CreateTournament"
+                            "$ref": "#/definitions/dtos.CreateTournament"
                         }
                     }
                 ],
@@ -516,13 +504,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Winner updated",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     },
                     "400": {
                         "description": "Error during winner updating",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -553,7 +541,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.ChangePhotoURL"
+                            "$ref": "#/definitions/dtos.ChangePhotoURL"
                         }
                     }
                 ],
@@ -561,13 +549,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Photo edited",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     },
                     "400": {
                         "description": "Error during photo change",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -627,13 +615,13 @@ const docTemplate = `{
                     "200": {
                         "description": "Tournaments of user",
                         "schema": {
-                            "$ref": "#/definitions/models.TournamentsResponse"
+                            "$ref": "#/definitions/dtos.TournamentsResponse"
                         }
                     },
                     "400": {
                         "description": "Couldn't get tournaments for specific user",
                         "schema": {
-                            "$ref": "#/definitions/controllers.MessageResponseType"
+                            "$ref": "#/definitions/dtos.MessageResponseType"
                         }
                     }
                 }
@@ -641,15 +629,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.MessageResponseType": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.AuthInput": {
+        "dtos.AuthInput": {
             "type": "object",
             "required": [
                 "name",
@@ -664,7 +644,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Bracket": {
+        "dtos.Bracket": {
             "type": "object",
             "properties": {
                 "countMatches": {
@@ -673,12 +653,12 @@ const docTemplate = `{
                 "rounds": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Round"
+                        "$ref": "#/definitions/dtos.Round"
                     }
                 }
             }
         },
-        "models.ChangePhotoURL": {
+        "dtos.ChangePhotoURL": {
             "type": "object",
             "required": [
                 "photoURL"
@@ -689,7 +669,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.CreateTiktok": {
+        "dtos.CreateTiktok": {
             "type": "object",
             "required": [
                 "name",
@@ -704,7 +684,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.CreateTournament": {
+        "dtos.CreateTournament": {
             "type": "object",
             "required": [
                 "name",
@@ -726,12 +706,12 @@ const docTemplate = `{
                 "tiktoks": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.CreateTiktok"
+                        "$ref": "#/definitions/dtos.CreateTiktok"
                     }
                 }
             }
         },
-        "models.EditTournament": {
+        "dtos.EditTournament": {
             "type": "object",
             "required": [
                 "name",
@@ -753,12 +733,12 @@ const docTemplate = `{
                 "tiktoks": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.CreateTiktok"
+                        "$ref": "#/definitions/dtos.CreateTiktok"
                     }
                 }
             }
         },
-        "models.Match": {
+        "dtos.Match": {
             "type": "object",
             "properties": {
                 "firstOption": {},
@@ -768,17 +748,88 @@ const docTemplate = `{
                 "secondOption": {}
             }
         },
-        "models.Round": {
+        "dtos.MessageResponseType": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.RegisterDetails": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.Round": {
             "type": "object",
             "properties": {
                 "matches": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Match"
+                        "$ref": "#/definitions/dtos.Match"
                     }
                 },
                 "round": {
                     "type": "integer"
+                }
+            }
+        },
+        "dtos.TournamentIds": {
+            "type": "object",
+            "required": [
+                "tournamentIds"
+            ],
+            "properties": {
+                "tournamentIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "dtos.TournamentsResponse": {
+            "type": "object",
+            "required": [
+                "tournamentCount",
+                "tournaments"
+            ],
+            "properties": {
+                "tournamentCount": {
+                    "type": "integer"
+                },
+                "tournaments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Tournament"
+                    }
+                }
+            }
+        },
+        "dtos.WhoAmI": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "photoURL": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         },
@@ -828,38 +879,6 @@ const docTemplate = `{
                 }
             }
         },
-        "models.TournamentIds": {
-            "type": "object",
-            "required": [
-                "tournamentIds"
-            ],
-            "properties": {
-                "tournamentIds": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "models.TournamentsResponse": {
-            "type": "object",
-            "required": [
-                "tournamentCount",
-                "tournaments"
-            ],
-            "properties": {
-                "tournamentCount": {
-                    "type": "integer"
-                },
-                "tournaments": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Tournament"
-                    }
-                }
-            }
-        },
         "models.User": {
             "type": "object",
             "properties": {
@@ -876,49 +895,18 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
-        },
-        "models.UserAuthDetails": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "token": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.WhoAmI": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "photoURL": {
-                    "type": "string"
-                },
-                "token": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
         }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
-	Host:             "localhost:8000",
-	BasePath:         "/api",
+	Version:          "",
+	Host:             "",
+	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "TikTok arena API",
-	Description:      "API for TikTok arena application",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

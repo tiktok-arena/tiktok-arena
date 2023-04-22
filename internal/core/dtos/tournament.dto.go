@@ -1,22 +1,12 @@
-package models
+package dtos
 
 import (
-	"github.com/google/uuid"
+	"tiktok-arena/internal/core/models"
 )
 
-type Tournament struct {
-	ID          *uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key"`
-	Name        string     `gorm:"not null;default:null"`
-	Size        int        `gorm:"not null"`
-	TimesPlayed int        `gorm:"not null"`
-	UserID      *uuid.UUID `gorm:"not null"`
-	User        *User      `gorm:"foreignKey:UserID"`
-	PhotoURL    string
-}
-
 type TournamentsResponse struct {
-	TournamentCount int64        `validate:"required"`
-	Tournaments     []Tournament `validate:"required"`
+	TournamentCount int64               `validate:"required"`
+	Tournaments     []models.Tournament `validate:"required"`
 }
 
 type TournamentWinner struct {
