@@ -11,7 +11,7 @@ type TiktokRepository struct {
 }
 
 func NewTiktokRepository(db *gorm.DB) *TiktokRepository {
-	return &TiktokRepository{db: db.Model(&models.Tiktok{})}
+	return &TiktokRepository{db: db}
 }
 
 func (r *TiktokRepository) CreateNewTiktok(newTiktok *models.Tiktok) error {

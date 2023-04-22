@@ -13,7 +13,7 @@ type TournamentRepository struct {
 }
 
 func NewTournamentRepository(db *gorm.DB) *TournamentRepository {
-	return &TournamentRepository{db: db.Model(&models.Tournament{})}
+	return &TournamentRepository{db: db}
 }
 
 func (r *TournamentRepository) GetTournamentById(tournamentId uuid.UUID) (*models.Tournament, error) {

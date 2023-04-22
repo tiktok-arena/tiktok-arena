@@ -17,13 +17,13 @@ func ErrorHandler(c *fiber.Ctx, err error) error {
 		code = fiber.StatusConflict
 		message = e.Error()
 	case services.JWTGenerateError:
-		code = fiber.StatusInternalServerError
+		code = fiber.StatusBadRequest
 		message = e.Error()
 	case services.RepositoryError:
-		code = fiber.StatusInternalServerError
+		code = fiber.StatusBadRequest
 		message = e.Error()
 	case services.BcryptError:
-		code = fiber.StatusInternalServerError
+		code = fiber.StatusBadRequest
 		message = e.Error()
 	case services.UUIDError:
 		code = fiber.StatusBadRequest
