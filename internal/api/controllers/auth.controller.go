@@ -61,7 +61,7 @@ func (cr *AuthController) LoginUser(c *fiber.Ctx) error {
 		return err
 	}
 
-	details, err := cr.AuthService.GetUserByName(payload)
+	details, err := cr.AuthService.GetUserByNameAndPassword(payload)
 	if err != nil {
 		return err
 	}

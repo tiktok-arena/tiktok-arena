@@ -66,7 +66,9 @@ func (r *TournamentRepository) CreateNewTournament(newTournament *models.Tournam
 
 func (r *TournamentRepository) EditTournament(t *models.Tournament) error {
 	record := r.db.
-		Where("id = ?", &t.ID).Updates(t)
+		Model(&models.Tournament{}).
+		Where("id = ?", &t.ID).
+		Updates(t)
 	return record.Error
 }
 
@@ -107,6 +109,7 @@ func (r *TournamentRepository) GetAllTournamentsForUserById(id uuid.UUID, totalT
 func (r *TournamentRepository) TotalTournaments() (int64, error) {
 	var totalTournaments int64
 	record := r.db.
+		Model(&models.Tournament{}).
 		Count(&totalTournaments)
 	return totalTournaments, record.Error
 }
@@ -114,6 +117,7 @@ func (r *TournamentRepository) TotalTournaments() (int64, error) {
 func (r *TournamentRepository) TotalTournamentsByUserId(id uuid.UUID) (int64, error) {
 	var totalTournaments int64
 	record := r.db.
+		Model(&models.Tournament{}).
 		Where("user_id = ?", id).
 		Count(&totalTournaments)
 	return totalTournaments, record.Error
@@ -121,6 +125,7 @@ func (r *TournamentRepository) TotalTournamentsByUserId(id uuid.UUID) (int64, er
 
 func (r *TournamentRepository) UpdateTournamentTimesPlayed(tournamentId uuid.UUID) error {
 	record := r.db.
+		Model(&models.Tournament{}).
 		Where("id = ?", tournamentId).
 		UpdateColumn("times_played", gorm.Expr("times_played + ?", 1))
 	return record.Error

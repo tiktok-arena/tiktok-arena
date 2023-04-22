@@ -57,7 +57,7 @@ func (s *AuthService) NewUser(auth *dtos.AuthInput) (details dtos.RegisterDetail
 	}, err
 }
 
-func (s *AuthService) GetUserByName(input *dtos.AuthInput) (details dtos.LoginDetails, err error) {
+func (s *AuthService) GetUserByNameAndPassword(input *dtos.AuthInput) (details dtos.LoginDetails, err error) {
 	err = validator.ValidateStruct(input)
 	if err != nil {
 		return details, ValidateError{err}

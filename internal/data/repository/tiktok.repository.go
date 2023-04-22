@@ -15,12 +15,14 @@ func NewTiktokRepository(db *gorm.DB) *TiktokRepository {
 }
 
 func (r *TiktokRepository) CreateNewTiktok(newTiktok *models.Tiktok) error {
-	record := r.db.Create(&newTiktok)
+	record := r.db.
+		Create(&newTiktok)
 	return record.Error
 }
 
 func (r *TiktokRepository) CreateNewTiktoks(t []models.Tiktok) error {
-	record := r.db.Create(t)
+	record := r.db.
+		Create(t)
 	return record.Error
 }
 
@@ -53,6 +55,7 @@ func (r *TiktokRepository) GetTournamentTiktoksById(tournamentId uuid.UUID) (*[]
 
 func (r *TiktokRepository) UpdateTiktokWins(tournamentId uuid.UUID, tiktokURL string) error {
 	record := r.db.
+		Model(&models.Tiktok{}).
 		Where("tournament_id = ? AND url = ?", tournamentId, tiktokURL).
 		UpdateColumn("wins", gorm.Expr("wins + ?", 1))
 	return record.Error
