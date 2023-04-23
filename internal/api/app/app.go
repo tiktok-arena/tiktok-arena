@@ -8,7 +8,7 @@ import (
 	"tiktok-arena/configuration"
 	"tiktok-arena/internal/api/controllers"
 	"tiktok-arena/internal/api/middleware"
-	"tiktok-arena/internal/api/router"
+	"tiktok-arena/internal/api/routers"
 	"tiktok-arena/internal/core/services"
 	"tiktok-arena/internal/data/database"
 	"tiktok-arena/internal/data/repository"
@@ -35,6 +35,10 @@ func Run(c *configuration.EnvConfigModel) {
 	userController := controllers.NewUserController(userService)
 	tournamentController := controllers.NewTournamentController(tournamentService)
 
+	authRouter := routers.NewAuthRouter(authController)
+	userRouter := routers.NewUserRouter(userController)
+	tournamentRouter := routers.NewTournamentRouter(tournamentController)
+
 	app := fiber.New(fiber.Config{ErrorHandler: middleware.ErrorHandler})
 
 	//	Logger middleware for logging HTTP request/response details
@@ -46,7 +50,7 @@ func Run(c *configuration.EnvConfigModel) {
 		AllowHeaders: "*",
 	}))
 
-	router.SetupRoutes(app, *tournamentController, *authController, *userController)
+	routers.SetupRoutes(app, tournamentRouter, authRouter, userRouter)
 
 	log.Fatal(app.Listen(":8000"))
 }

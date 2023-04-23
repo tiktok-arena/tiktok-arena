@@ -152,7 +152,7 @@ func (cr *TournamentController) DeleteTournaments(c *fiber.Ctx) error {
 //	@Param			search				query		string						false	"search"
 //	@Success		200					{array}		dtos.TournamentsResponse	"Contest bracket"
 //	@Failure		400					{object}	dtos.MessageResponseType	"Failed to return tournament contest"
-//	@Router			/tournament [get]																																																																																																																																																																																																				[get]
+//	@Router			/tournament [get]																																																																																																																																																																																																												[get]
 func (cr *TournamentController) GetAllTournaments(c *fiber.Ctx) error {
 	q := new(dtos.PaginationQueries)
 	if err := c.QueryParser(q); err != nil {

@@ -1,3 +1,4 @@
+basePath: /api
 definitions:
   dtos.AuthInput:
     properties:
@@ -176,8 +177,12 @@ definitions:
       photoURL:
         type: string
     type: object
+host: localhost:8000
 info:
   contact: {}
+  description: API for TikTok arena application
+  title: TikTok arena API
+  version: "1.0"
 paths:
   /auth/login:
     post:
