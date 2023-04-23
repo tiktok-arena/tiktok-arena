@@ -38,8 +38,8 @@ func (cr *UserController) TournamentsOfUser(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	var payload *dtos.PaginationQueries
-	if err := c.QueryParser(payload); err != nil {
+	payload := new(dtos.PaginationQueries)
+	if err = c.QueryParser(payload); err != nil {
 		return err
 	}
 	dtos.ValidatePaginationQueries(payload)

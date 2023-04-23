@@ -101,7 +101,6 @@ func (r *TournamentRepository) GetAllTournamentsForUserById(id uuid.UUID, totalT
 		Where("user_id = ?", id).
 		Scopes(scopes.Search(queries.SearchText)).
 		Scopes(scopes.Paginate(queries.Page, queries.Count)).
-		Limit(100).
 		Find(&tournaments)
 	return dtos.TournamentsResponse{TournamentCount: totalTournaments, Tournaments: tournaments}, record.Error
 }
