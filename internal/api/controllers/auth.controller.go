@@ -4,14 +4,19 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"tiktok-arena/internal/core/dtos"
-	"tiktok-arena/internal/core/services"
 )
 
-type AuthController struct {
-	AuthService *services.AuthService
+type AuthService interface {
+	NewUser(auth *dtos.AuthInput) (details dtos.RegisterDetails, err error)
+	GetUserByNameAndPassword(input *dtos.AuthInput) (details dtos.LoginDetails, err error)
+	WhoAmI(token *jwt.Token) (whoami dtos.WhoAmI, err error)
 }
 
-func NewAuthController(authService *services.AuthService) *AuthController {
+type AuthController struct {
+	AuthService AuthService
+}
+
+func NewAuthController(authService AuthService) *AuthController {
 	return &AuthController{AuthService: authService}
 }
 

@@ -108,10 +108,10 @@ func (e EmptyTiktokURLError) Error() string {
 	return "Provided empty Tiktok URL"
 }
 
-type NotAllowedTournamentTypeError struct {
-	ContestType string
+type NotAllowedBracketTypeError struct {
+	BracketType string
 }
 
-func (e NotAllowedTournamentTypeError) Error() string {
-	return fmt.Sprintf("Provided not allowed tournament type: %s", e.ContestType)
+func (e NotAllowedBracketTypeError) Error() string {
+	return fmt.Sprintf("Provided not allowed bracket type: %s", e.BracketType)
 }

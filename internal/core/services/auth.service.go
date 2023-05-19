@@ -7,15 +7,21 @@ import (
 	"tiktok-arena/internal/core/dtos"
 	"tiktok-arena/internal/core/models"
 	"tiktok-arena/internal/core/validator"
-	"tiktok-arena/internal/data/repository"
 	"time"
 )
 
-type AuthService struct {
-	UserRepository *repository.UserRepository
+type AuthServiceUserRepository interface {
+	GetUserByName(username string) (models.User, error)
+	UserExists(username string) (bool, error)
+	CreateUser(newUser *models.User) error
+	GetUserPhoto(id string) (string, error)
 }
 
-func NewAuthService(userRepository *repository.UserRepository) *AuthService {
+type AuthService struct {
+	UserRepository AuthServiceUserRepository
+}
+
+func NewAuthService(userRepository AuthServiceUserRepository) *AuthService {
 	return &AuthService{UserRepository: userRepository}
 }
 

@@ -4,15 +4,23 @@ import (
 	"github.com/google/uuid"
 	"tiktok-arena/internal/core/dtos"
 	"tiktok-arena/internal/core/validator"
-	"tiktok-arena/internal/data/repository"
 )
 
-type UserService struct {
-	UserRepository       *repository.UserRepository
-	TournamentRepository *repository.TournamentRepository
+type UserServiceTournamentRepository interface {
+	TotalTournamentsByUserId(id uuid.UUID) (int64, error)
+	GetAllTournamentsForUserById(id uuid.UUID, totalTournaments int64, queries *dtos.PaginationQueries) (dtos.TournamentsResponse, error)
 }
 
-func NewUserService(userRepository *repository.UserRepository, tournamentRepository *repository.TournamentRepository) *UserService {
+type UserServiceUserRepository interface {
+	ChangeUserPhoto(url string, id uuid.UUID) error
+}
+
+type UserService struct {
+	UserRepository       UserServiceUserRepository
+	TournamentRepository UserServiceTournamentRepository
+}
+
+func NewUserService(userRepository UserServiceUserRepository, tournamentRepository UserServiceTournamentRepository) *UserService {
 	return &UserService{UserRepository: userRepository, TournamentRepository: tournamentRepository}
 }
 

@@ -6,16 +6,40 @@ import (
 	"tiktok-arena/internal/core/dtos"
 	"tiktok-arena/internal/core/models"
 	"tiktok-arena/internal/core/validator"
-	"tiktok-arena/internal/data/repository"
 )
 
-type TournamentService struct {
-	TournamentRepository *repository.TournamentRepository
-	TiktokRepository     *repository.TiktokRepository
+type TournamentServiceTournamentRepository interface {
+	GetTournamentById(tournamentId uuid.UUID) (*models.Tournament, error)
+	CheckIfTournamentExistsByName(name string) (bool, error)
+	CheckIfNameIsTakenByOtherTournament(name string, id uuid.UUID) (bool, error)
+	CheckIfTournamentExistsById(id uuid.UUID) (bool, error)
+	CheckIfTournamentsExistsByIds(ids []string, userId uuid.UUID) (bool, error)
+	CreateNewTournament(newTournament *models.Tournament) error
+	EditTournament(t *models.Tournament) error
+	DeleteTournamentById(id uuid.UUID, userId uuid.UUID) error
+	DeleteTournamentsByIds(ids []string, userId uuid.UUID) error
+	GetTournaments(totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error)
+	TotalTournaments() (int64, error)
+	UpdateTournamentTimesPlayed(tournamentId uuid.UUID) error
 }
 
-func NewTournamentService(tournamentRepository *repository.TournamentRepository,
-	tiktokRepository *repository.TiktokRepository) *TournamentService {
+type TournamentServiceTiktokRepository interface {
+	CreateNewTiktok(newTiktok *models.Tiktok) error
+	CreateNewTiktoks(t []models.Tiktok) error
+	EditTiktok(t *models.Tiktok) error
+	DeleteTiktoks(t *[]models.Tiktok) error
+	DeleteTiktoksByIds(ids []string) error
+	GetTournamentTiktoksById(tournamentId uuid.UUID) (*[]models.Tiktok, error)
+	UpdateTiktokWins(tournamentId uuid.UUID, tiktokURL string) error
+}
+
+type TournamentService struct {
+	TournamentRepository TournamentServiceTournamentRepository
+	TiktokRepository     TournamentServiceTiktokRepository
+}
+
+func NewTournamentService(tournamentRepository TournamentServiceTournamentRepository,
+	tiktokRepository TournamentServiceTiktokRepository) *TournamentService {
 	return &TournamentService{TournamentRepository: tournamentRepository, TiktokRepository: tiktokRepository}
 }
 
@@ -293,13 +317,13 @@ func (s *TournamentService) TournamentWinner(tournamentIdString string, winner *
 	return nil
 }
 
-func (s *TournamentService) GetTournamentContest(tournamentIdString string, contestType string) (bracket *dtos.Bracket, err error) {
+func (s *TournamentService) GetTournamentContest(tournamentIdString string, bracketType string) (bracket *dtos.Bracket, err error) {
 	if tournamentIdString == "" {
 		return bracket, EmptyTournamentIdError{}
 	}
 
-	if !dtos.CheckIfAllowedTournamentType(contestType) {
-		return bracket, NotAllowedTournamentTypeError{contestType}
+	if !dtos.CheckIfAllowedBracketType(bracketType) {
+		return bracket, NotAllowedBracketTypeError{bracketType}
 	}
 	tournamentId, err := uuid.Parse(tournamentIdString)
 	if err != nil {
@@ -311,18 +335,18 @@ func (s *TournamentService) GetTournamentContest(tournamentIdString string, cont
 		return bracket, RepositoryError{err}
 	}
 	models.ShuffleTiktok(*tiktoks)
-	if contestType == dtos.SingleElimination {
-		return s.SingleElimination(*tiktoks), err
+	if bracketType == dtos.SingleElimination {
+		return SingleElimination(*tiktoks), err
 	}
-	if contestType == dtos.KingOfTheHill {
-		return s.KingOfTheHill(*tiktoks), err
+	if bracketType == dtos.KingOfTheHill {
+		return KingOfTheHill(*tiktoks), err
 	}
 	return
 }
 
 // SingleElimination
 // https://en.wikipedia.org/wiki/Single-elimination_tournament
-func (s *TournamentService) SingleElimination(t []models.Tiktok) *dtos.Bracket {
+func SingleElimination(t []models.Tiktok) *dtos.Bracket {
 	countTiktok := len(t)
 	countRound := int(math.Ceil(math.Log2(float64(countTiktok))))
 	countSecondRoundParticipators := 1 << (countRound - 1) // Equivalent to int(math.Pow(2, float64(countRound)) / 2)
@@ -412,7 +436,7 @@ func (s *TournamentService) SingleElimination(t []models.Tiktok) *dtos.Bracket {
 // First match decided randomly between two participators.
 // Loser of match leaves the game, winner will go to next match, next opponent decided randomly from standings.
 // Procedure continues until last standing.
-func (s *TournamentService) KingOfTheHill(t []models.Tiktok) *dtos.Bracket {
+func KingOfTheHill(t []models.Tiktok) *dtos.Bracket {
 	countTiktok := len(t)
 	rounds := make([]dtos.Round, 0, countTiktok-1)
 	match := dtos.Match{

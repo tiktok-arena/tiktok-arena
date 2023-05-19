@@ -2,17 +2,22 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"tiktok-arena/internal/api/controllers/response"
 	"tiktok-arena/internal/core/dtos"
-	"tiktok-arena/internal/core/services"
 	"tiktok-arena/internal/core/validator"
 )
 
-type UserController struct {
-	UserService *services.UserService
+type UserService interface {
+	TournamentsOfUser(id uuid.UUID, queries *dtos.PaginationQueries) (response dtos.TournamentsResponse, err error)
+	ChangeUserPhoto(change *dtos.ChangePhotoURL, userId uuid.UUID) (err error)
 }
 
-func NewUserController(userService *services.UserService) *UserController {
+type UserController struct {
+	UserService UserService
+}
+
+func NewUserController(userService UserService) *UserController {
 	return &UserController{UserService: userService}
 }
 

@@ -3,17 +3,30 @@ package controllers
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"tiktok-arena/internal/api/controllers/response"
 	"tiktok-arena/internal/core/dtos"
-	"tiktok-arena/internal/core/services"
+	"tiktok-arena/internal/core/models"
 	"tiktok-arena/internal/core/validator"
 )
 
-type TournamentController struct {
-	TournamentService *services.TournamentService
+type TournamentService interface {
+	CreateTournament(create *dtos.CreateTournament, userId uuid.UUID) error
+	EditTournament(edit *dtos.EditTournament, userId uuid.UUID, tournamentIdString string) error
+	DeleteTournament(userId uuid.UUID, tournamentIdString string) error
+	DeleteTournaments(userId uuid.UUID, tournamentIds *dtos.TournamentIds) error
+	GetAllTournaments(queries *dtos.PaginationQueries) (response dtos.TournamentsResponse, err error)
+	GetTournamentDetails(tournamentIdString string) (tournament *models.Tournament, err error)
+	GetTournamentTiktoks(tournamentIdString string) (tiktoks *[]models.Tiktok, err error)
+	TournamentWinner(tournamentIdString string, winner *dtos.TournamentWinner) error
+	GetTournamentContest(tournamentIdString string, contestType string) (bracket *dtos.Bracket, err error)
 }
 
-func NewTournamentController(tournamentService *services.TournamentService) *TournamentController {
+type TournamentController struct {
+	TournamentService TournamentService
+}
+
+func NewTournamentController(tournamentService TournamentService) *TournamentController {
 	return &TournamentController{TournamentService: tournamentService}
 }
 
@@ -247,7 +260,7 @@ func (cr *TournamentController) TournamentWinner(c *fiber.Ctx) error {
 //	@Accept			json
 //	@Produce		json
 //	@Param			tournamentId	path		string						true	"Tournament id"
-//	@Param			payload			query		dtos.ContestPayload			true	"Contest type"
+//	@Param			payload			query		dtos.BracketPayload			true	"Contest type"
 //	@Success		200				{object}	dtos.Bracket				"Contest bracket"
 //	@Failure		400				{object}	dtos.MessageResponseType	"Failed to return tournament contest"
 //	@Router			/tournament/contest/{tournamentId} [get]
