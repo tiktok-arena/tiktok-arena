@@ -19,7 +19,7 @@ type TournamentService interface {
 	GetTournamentDetails(tournamentIdString string) (tournament *models.Tournament, err error)
 	GetTournamentTiktoks(tournamentIdString string) (tiktoks *[]models.Tiktok, err error)
 	TournamentWinner(tournamentIdString string, winner *dtos.TournamentWinner) error
-	GetTournamentContest(tournamentIdString string, contestType string) (bracket *dtos.Bracket, err error)
+	GetTournamentContest(tournamentIdString string, contestType string) (bracket *dtos.Contest, err error)
 }
 
 type TournamentController struct {
@@ -164,8 +164,8 @@ func (cr *TournamentController) DeleteTournaments(c *fiber.Ctx) error {
 //	@Param			count				query		string						false	"page size"
 //	@Param			search				query		string						false	"search"
 //	@Success		200					{array}		dtos.TournamentsResponse	"Contest bracket"
-//	@Failure		400					{object}	dtos.MessageResponseType	"Failed to return tournament contest"
-//	@Router			/tournament [get]																																																																																																																																																																																																												[get]
+//	@Failure		400					{object}	dtos.MessageResponseType	"Failed to return tournament contests"
+//	@Router			/tournament [get]																																																																																																																																																																																																																																				[get]
 func (cr *TournamentController) GetAllTournaments(c *fiber.Ctx) error {
 	q := new(dtos.PaginationQueries)
 	if err := c.QueryParser(q); err != nil {
@@ -254,16 +254,16 @@ func (cr *TournamentController) TournamentWinner(c *fiber.Ctx) error {
 
 // GetTournamentContest
 //
-//	@Summary		Tournament contest
-//	@Description	Get tournament contest
+//	@Summary		Tournament contests
+//	@Description	Get tournament contests
 //	@Tags			tournament
 //	@Accept			json
 //	@Produce		json
 //	@Param			tournamentId	path		string						true	"Tournament id"
-//	@Param			payload			query		dtos.BracketPayload			true	"Contest type"
-//	@Success		200				{object}	dtos.Bracket				"Contest bracket"
-//	@Failure		400				{object}	dtos.MessageResponseType	"Failed to return tournament contest"
-//	@Router			/tournament/contest/{tournamentId} [get]
+//	@Param			payload			query		dtos.ContestPayload			true	"Contest type"
+//	@Success		200				{object}	dtos.Contest				"Contest bracket"
+//	@Failure		400				{object}	dtos.MessageResponseType	"Failed to return tournament contests"
+//	@Router			/tournament/contests/{tournamentId} [get]
 func (cr *TournamentController) GetTournamentContest(c *fiber.Ctx) error {
 	tournamentIdString := c.Params("tournamentId")
 	contestType := c.Query("type")

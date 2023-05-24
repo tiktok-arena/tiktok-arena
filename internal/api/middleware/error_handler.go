@@ -46,7 +46,7 @@ func ErrorHandler(c *fiber.Ctx, err error) error {
 	case services.EmptyTiktokURLError:
 		code = fiber.StatusBadRequest
 		message = e.Error()
-	case services.NotAllowedBracketTypeError:
+	case services.NotAllowedContestTypeError:
 		code = fiber.StatusBadRequest
 		message = e.Error()
 	default:

@@ -173,7 +173,7 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Failed to return tournament contest",
+                        "description": "Failed to return tournament contests",
                         "schema": {
                             "$ref": "#/definitions/dtos.MessageResponseType"
                         }
@@ -181,9 +181,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/tournament/contest/{tournamentId}": {
+        "/tournament/contests/{tournamentId}": {
             "get": {
-                "description": "Get tournament contest",
+                "description": "Get tournament contests",
                 "consumes": [
                     "application/json"
                 ],
@@ -193,7 +193,7 @@ const docTemplate = `{
                 "tags": [
                     "tournament"
                 ],
-                "summary": "Tournament contest",
+                "summary": "Tournament contests",
                 "parameters": [
                     {
                         "type": "string",
@@ -204,7 +204,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "name": "contestType",
+                        "name": "type",
                         "in": "query",
                         "required": true
                     }
@@ -213,11 +213,11 @@ const docTemplate = `{
                     "200": {
                         "description": "Contest bracket",
                         "schema": {
-                            "$ref": "#/definitions/dtos.Bracket"
+                            "$ref": "#/definitions/dtos.Contest"
                         }
                     },
                     "400": {
-                        "description": "Failed to return tournament contest",
+                        "description": "Failed to return tournament contests",
                         "schema": {
                             "$ref": "#/definitions/dtos.MessageResponseType"
                         }
@@ -644,7 +644,18 @@ const docTemplate = `{
                 }
             }
         },
-        "dtos.Bracket": {
+        "dtos.ChangePhotoURL": {
+            "type": "object",
+            "required": [
+                "photoURL"
+            ],
+            "properties": {
+                "photoURL": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.Contest": {
             "type": "object",
             "properties": {
                 "countMatches": {
@@ -655,17 +666,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/dtos.Round"
                     }
-                }
-            }
-        },
-        "dtos.ChangePhotoURL": {
-            "type": "object",
-            "required": [
-                "photoURL"
-            ],
-            "properties": {
-                "photoURL": {
-                    "type": "string"
                 }
             }
         },
@@ -901,12 +901,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
-	Host:             "localhost:8000",
-	BasePath:         "/api",
+	Version:          "",
+	Host:             "",
+	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "TikTok arena API",
-	Description:      "API for TikTok arena application",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

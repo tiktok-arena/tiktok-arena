@@ -1,4 +1,3 @@
-basePath: /api
 definitions:
   dtos.AuthInput:
     properties:
@@ -10,7 +9,14 @@ definitions:
     - name
     - password
     type: object
-  dtos.Bracket:
+  dtos.ChangePhotoURL:
+    properties:
+      photoURL:
+        type: string
+    required:
+    - photoURL
+    type: object
+  dtos.Contest:
     properties:
       countMatches:
         type: integer
@@ -18,13 +24,6 @@ definitions:
         items:
           $ref: '#/definitions/dtos.Round'
         type: array
-    type: object
-  dtos.ChangePhotoURL:
-    properties:
-      photoURL:
-        type: string
-    required:
-    - photoURL
     type: object
   dtos.CreateTiktok:
     properties:
@@ -177,12 +176,8 @@ definitions:
       photoURL:
         type: string
     type: object
-host: localhost:8000
 info:
   contact: {}
-  description: API for TikTok arena application
-  title: TikTok arena API
-  version: "1.0"
 paths:
   /auth/login:
     post:
@@ -285,7 +280,7 @@ paths:
               $ref: '#/definitions/dtos.TournamentsResponse'
             type: array
         "400":
-          description: Failed to return tournament contest
+          description: Failed to return tournament contests
           schema:
             $ref: '#/definitions/dtos.MessageResponseType'
       summary: All tournaments
@@ -347,7 +342,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get tournament contest
+      description: Get tournament contests
       parameters:
       - description: Tournament id
         in: path
@@ -355,7 +350,7 @@ paths:
         required: true
         type: string
       - in: query
-        name: contestType
+        name: type
         required: true
         type: string
       produces:
@@ -364,12 +359,12 @@ paths:
         "200":
           description: Contest bracket
           schema:
-            $ref: '#/definitions/dtos.Bracket'
+            $ref: '#/definitions/dtos.Contest'
         "400":
-          description: Failed to return tournament contest
+          description: Failed to return tournament contests
           schema:
             $ref: '#/definitions/dtos.MessageResponseType'
-      summary: Tournament contest
+      summary: Tournament contests
       tags:
       - tournament
   /tournament/create:

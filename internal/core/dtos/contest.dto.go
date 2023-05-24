@@ -5,18 +5,18 @@ const (
 	KingOfTheHill     = "king_of_the_hill"
 )
 
-func GetAllowedBracketType() map[string]bool {
+func GetAllowedContestType() map[string]bool {
 	return map[string]bool{
 		SingleElimination: true,
 		KingOfTheHill:     true,
 	}
 }
 
-func CheckIfAllowedBracketType(bracketType string) bool {
-	return GetAllowedBracketType()[bracketType]
+func CheckIfAllowedContestType(contestType string) bool {
+	return GetAllowedContestType()[contestType]
 }
 
-type Bracket struct {
+type Contest struct {
 	CountMatches int
 	Rounds       []Round
 }
@@ -24,6 +24,12 @@ type Bracket struct {
 type Round struct {
 	Round   int
 	Matches []Match
+}
+
+type Match struct {
+	MatchID      string
+	FirstOption  Option
+	SecondOption Option
 }
 
 type Option interface {
@@ -46,12 +52,6 @@ func (m TiktokOption) isOption() bool {
 	return true
 }
 
-type Match struct {
-	MatchID      string
-	FirstOption  Option
-	SecondOption Option
-}
-
-type BracketPayload struct {
-	BracketType string `validate:"required"`
+type ContestPayload struct {
+	Type string `validate:"required"`
 }

@@ -1,13 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "API for TikTok arena application",
-        "title": "TikTok arena API",
-        "contact": {},
-        "version": "1.0"
+        "contact": {}
     },
-    "host": "localhost:8000",
-    "basePath": "/api",
     "paths": {
         "/auth/login": {
             "post": {
@@ -198,7 +193,7 @@
                     },
                     {
                         "type": "string",
-                        "name": "contestType",
+                        "name": "type",
                         "in": "query",
                         "required": true
                     }
@@ -207,7 +202,7 @@
                     "200": {
                         "description": "Contest bracket",
                         "schema": {
-                            "$ref": "#/definitions/dtos.Bracket"
+                            "$ref": "#/definitions/dtos.Contest"
                         }
                     },
                     "400": {
@@ -638,7 +633,18 @@
                 }
             }
         },
-        "dtos.Bracket": {
+        "dtos.ChangePhotoURL": {
+            "type": "object",
+            "required": [
+                "photoURL"
+            ],
+            "properties": {
+                "photoURL": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.Contest": {
             "type": "object",
             "properties": {
                 "countMatches": {
@@ -649,17 +655,6 @@
                     "items": {
                         "$ref": "#/definitions/dtos.Round"
                     }
-                }
-            }
-        },
-        "dtos.ChangePhotoURL": {
-            "type": "object",
-            "required": [
-                "photoURL"
-            ],
-            "properties": {
-                "photoURL": {
-                    "type": "string"
                 }
             }
         },
