@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 	"tiktok-arena/internal/core/contests"
 	"tiktok-arena/internal/core/dtos"
 	"tiktok-arena/internal/core/models"
@@ -123,7 +124,7 @@ func (s *TournamentService) EditTournament(edit *dtos.EditTournament, userId uui
 	}
 
 	nameIsTakenByOtherTournament, err := s.TournamentRepository.CheckIfNameIsTakenByOtherTournament(edit.Name, tournamentIdUUID)
-	if err != nil {
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return RepositoryError{err}
 	}
 	if nameIsTakenByOtherTournament {
