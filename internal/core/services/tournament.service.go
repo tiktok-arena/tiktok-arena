@@ -259,7 +259,7 @@ func (s *TournamentService) GetAllTournaments(queries *dtos.PaginationQueries) (
 	return
 }
 
-func (s *TournamentService) GetTournamentDetails(tournamentIdString string) (tournament *models.Tournament, err error) {
+func (s *TournamentService) GetTournament(tournamentIdString string) (tournament *models.Tournament, err error) {
 	if tournamentIdString == "" {
 		return tournament, EmptyTournamentIdError{}
 	}

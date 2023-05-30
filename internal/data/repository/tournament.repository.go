@@ -28,6 +28,9 @@ func (r *TournamentRepository) CheckIfTournamentExistsByName(name string) (bool,
 	record := r.db.
 		Select("id").
 		First(&tournament, "name = ?", name)
+	if record.Error == gorm.ErrRecordNotFound {
+		return false, nil
+	}
 	return tournament.ID != nil, record.Error
 }
 

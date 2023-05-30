@@ -10,12 +10,13 @@ import (
 )
 
 func ConnectDB(config *configuration.EnvConfigModel) *gorm.DB {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require",
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
 		config.DBHost,
 		config.DBUserName,
 		config.DBUserPassword,
 		config.DBName,
 		config.DBPort,
+		config.SSLMode,
 	)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {

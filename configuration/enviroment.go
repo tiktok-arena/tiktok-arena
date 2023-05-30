@@ -11,6 +11,7 @@ type EnvConfigModel struct {
 	DBUserPassword string `mapstructure:"POSTGRES_PASSWORD"`
 	DBName         string `mapstructure:"POSTGRES_DB"`
 	DBPort         string `mapstructure:"POSTGRES_PORT"`
+	SSLMode        string `mapstructure:"SSL_MODE"`
 
 	JwtSecret    string        `mapstructure:"JWT_SECRET_KEY"`
 	JwtExpiresIn time.Duration `mapstructure:"JWT_SECRET_KEY_EXPIRES_IN"`

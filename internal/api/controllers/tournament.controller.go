@@ -16,7 +16,7 @@ type TournamentService interface {
 	DeleteTournament(userId uuid.UUID, tournamentIdString string) error
 	DeleteTournaments(userId uuid.UUID, tournamentIds *dtos.TournamentIds) error
 	GetAllTournaments(queries *dtos.PaginationQueries) (response dtos.TournamentsResponse, err error)
-	GetTournamentDetails(tournamentIdString string) (tournament *models.Tournament, err error)
+	GetTournament(tournamentIdString string) (tournament *models.Tournament, err error)
 	GetTournamentTiktoks(tournamentIdString string) (tiktoks *[]models.Tiktok, err error)
 	TournamentWinner(tournamentIdString string, winner *dtos.TournamentWinner) error
 	GetTournamentContest(tournamentIdString string, contestType string) (bracket *dtos.Contest, err error)
@@ -192,7 +192,7 @@ func (cr *TournamentController) GetAllTournaments(c *fiber.Ctx) error {
 //	@Router			/tournament/{tournamentId} [get]
 func (cr *TournamentController) GetTournamentDetails(c *fiber.Ctx) error {
 	tournamentIdString := c.Params("tournamentId")
-	tournament, err := cr.TournamentService.GetTournamentDetails(tournamentIdString)
+	tournament, err := cr.TournamentService.GetTournament(tournamentIdString)
 	if err != nil {
 		return err
 	}
