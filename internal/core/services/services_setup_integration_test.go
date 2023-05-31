@@ -3,7 +3,6 @@ package services
 import (
 	"gorm.io/gorm"
 	"log"
-	"os"
 	"testing"
 	"tiktok-arena/configuration"
 	"tiktok-arena/internal/data/database"
@@ -11,10 +10,6 @@ import (
 
 type DatabaseIntegrationTest struct {
 	db *gorm.DB
-}
-
-func TestMain(m *testing.M) {
-	os.Exit(m.Run())
 }
 
 func SetupIntegration(t *testing.T) *DatabaseIntegrationTest {

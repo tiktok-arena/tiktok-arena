@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"tiktok-arena/configuration"
 	"tiktok-arena/internal/core/dtos"
@@ -51,7 +52,7 @@ func (s *AuthService) NewUser(auth *dtos.AuthInput) (details dtos.RegisterDetail
 		return details, RepositoryError{err}
 	}
 
-	token, err := UserJwtToken(&newUser)
+	token, err := UserJwtToken(*newUser.ID, newUser.Name)
 	if err != nil {
 		return details, JWTGenerateError{err}
 	}
@@ -79,21 +80,17 @@ func (s *AuthService) GetUserByNameAndPassword(input *dtos.AuthInput) (details d
 		return details, BcryptError{err}
 	}
 
-	token, err := UserJwtToken(&user)
+	token, err := UserJwtToken(*user.ID, user.Name)
 
 	if err != nil {
 		return details, JWTGenerateError{err}
 	}
 
-	url, err := s.UserRepository.GetUserPhoto(user.ID.String())
-	if err != nil {
-		return details, RepositoryError{err}
-	}
 	return dtos.LoginDetails{
-		ID:       user.ID.String(),
+		ID:       user.ID,
 		Username: user.Name,
 		Token:    token,
-		PhotoURL: url,
+		PhotoURL: user.PhotoURL,
 	}, err
 
 }
@@ -123,12 +120,13 @@ func (s *AuthService) WhoAmI(token *jwt.Token) (whoami dtos.WhoAmI, err error) {
 	}, err
 }
 
-func UserJwtToken(user *models.User) (string, error) {
+func UserJwtToken(id uuid.UUID, name string) (string, error) {
+
 	now := time.Now().UTC()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub":  user.ID,
-		"name": user.Name,
+		"sub":  id.String(),
+		"name": name,
 		"exp":  now.Add(configuration.EnvConfig.JwtExpiresIn).Unix(),
 		"iat":  now.Unix(),
 		"nbf":  now.Unix(),

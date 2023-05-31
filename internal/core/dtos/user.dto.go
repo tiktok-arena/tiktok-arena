@@ -18,7 +18,7 @@ type RegisterDetails struct {
 }
 
 type LoginDetails struct {
-	ID       string
+	ID       *uuid.UUID
 	Username string
 	Token    string
 	PhotoURL string
