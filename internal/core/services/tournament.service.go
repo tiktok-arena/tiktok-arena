@@ -295,9 +295,9 @@ func (s *TournamentService) TournamentWinner(tournamentIdString string, winner *
 		return EmptyTournamentIdError{}
 	}
 
-	tournamentId, err := uuid.Parse(tournamentIdString)
+	tournamentId, _ := uuid.Parse(tournamentIdString) // Ignore error, because error will be handled later in validate
 
-	err = validator.ValidateStruct(winner)
+	err := validator.ValidateStruct(winner)
 	if err != nil {
 		return ValidateError{err}
 	}
