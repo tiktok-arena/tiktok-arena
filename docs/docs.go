@@ -131,7 +131,7 @@ const docTemplate = `{
         },
         "/tournament": {
             "get": {
-                "description": "Get all tournaments",
+                "description": "Get tournament details by its id",
                 "consumes": [
                     "application/json"
                 ],
@@ -141,39 +141,25 @@ const docTemplate = `{
                 "tags": [
                     "tournament"
                 ],
-                "summary": "All tournaments",
+                "summary": "Tournament details",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "page number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "page size",
-                        "name": "count",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "search",
-                        "name": "search",
-                        "in": "query"
+                        "description": "Tournament id",
+                        "name": "tournamentId",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Contest bracket",
+                        "description": "Tournament",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/dtos.TournamentsResponse"
-                            }
+                            "$ref": "#/definitions/models.Tournament"
                         }
                     },
                     "400": {
-                        "description": "Failed to return tournament contests",
+                        "description": "Tournament not found",
                         "schema": {
                             "$ref": "#/definitions/dtos.MessageResponseType"
                         }
@@ -315,41 +301,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/tournament/delete/{tournamentId}": {
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Delete tournament for current user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tournament"
-                ],
-                "summary": "Delete tournament",
-                "responses": {
-                    "200": {
-                        "description": "Tournament deleted",
-                        "schema": {
-                            "$ref": "#/definitions/dtos.MessageResponseType"
-                        }
-                    },
-                    "400": {
-                        "description": "Error during tournament deletion",
-                        "schema": {
-                            "$ref": "#/definitions/dtos.MessageResponseType"
-                        }
-                    }
-                }
-            }
-        },
-        "/tournament/edit/{tournamentId}": {
+        "/tournament/edit": {
             "put": {
                 "security": [
                     {
@@ -436,42 +388,6 @@ const docTemplate = `{
             }
         },
         "/tournament/{tournamentId}": {
-            "get": {
-                "description": "Get tournament details by its id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tournament"
-                ],
-                "summary": "Tournament details",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Tournament id",
-                        "name": "tournamentId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Tournament",
-                        "schema": {
-                            "$ref": "#/definitions/models.Tournament"
-                        }
-                    },
-                    "400": {
-                        "description": "Tournament not found",
-                        "schema": {
-                            "$ref": "#/definitions/dtos.MessageResponseType"
-                        }
-                    }
-                }
-            },
             "put": {
                 "security": [
                     {

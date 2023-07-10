@@ -74,7 +74,7 @@ func (cr *TournamentController) CreateTournament(c *fiber.Ctx) error {
 //	@Param			payload	body		dtos.EditTournament			true	"Data to edit tournament"
 //	@Success		200		{object}	dtos.MessageResponseType	"Tournament edited"
 //	@Failure		400		{object}	dtos.MessageResponseType	"Error during tournament edition"
-//	@Router			/tournament/edit/{tournamentId} [put]
+//	@Router			/tournament/edit [put]
 func (cr *TournamentController) EditTournament(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	userId, err := validator.GetUserIdAndCheckJWT(user)
@@ -107,7 +107,7 @@ func (cr *TournamentController) EditTournament(c *fiber.Ctx) error {
 //	@Security		ApiKeyAuth
 //	@Success		200	{object}	dtos.MessageResponseType	"Tournament deleted"
 //	@Failure		400	{object}	dtos.MessageResponseType	"Error during tournament deletion"
-//	@Router			/tournament/delete/{tournamentId} [delete]
+//	@Router			/tournament/delete [delete]
 func (cr *TournamentController) DeleteTournament(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	userId, err := validator.GetUserIdAndCheckJWT(user)
@@ -170,7 +170,7 @@ func (cr *TournamentController) DeleteTournaments(c *fiber.Ctx) error {
 //	@Param			search				query		string						false	"search"
 //	@Success		200					{array}		dtos.TournamentsResponse	"Contest bracket"
 //	@Failure		400					{object}	dtos.MessageResponseType	"Failed to return tournament contests"
-//	@Router			/tournament [get]																																																																																																																																																																																																																																												[get]
+//	@Router			/tournament [get]																																																																																																																																																																																																																																																				[get]
 func (cr *TournamentController) GetAllTournaments(c *fiber.Ctx) error {
 	q := new(dtos.PaginationQueries)
 	if err := c.QueryParser(q); err != nil {
@@ -194,7 +194,7 @@ func (cr *TournamentController) GetAllTournaments(c *fiber.Ctx) error {
 //	@Param			tournamentId	path		string						true	"Tournament id"
 //	@Success		200				{object}	models.Tournament			"Tournament"
 //	@Failure		400				{object}	dtos.MessageResponseType	"Tournament not found"
-//	@Router			/tournament/{tournamentId} [get]
+//	@Router			/tournament [get]
 func (cr *TournamentController) GetTournamentDetails(c *fiber.Ctx) error {
 	tournamentIdString := c.Params("tournamentId")
 	tournament, err := cr.TournamentService.GetTournament(tournamentIdString)
