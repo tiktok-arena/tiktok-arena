@@ -6,8 +6,8 @@ import (
 )
 
 func ErrorHandler(c *fiber.Ctx, err error) error {
-	code := fiber.StatusInternalServerError
-	message := "Internal Server Error"
+	var code int
+	var message string
 
 	switch e := err.(type) {
 	case services.ValidateError:

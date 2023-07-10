@@ -78,6 +78,9 @@ func (cr *TournamentController) CreateTournament(c *fiber.Ctx) error {
 func (cr *TournamentController) EditTournament(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	userId, err := validator.GetUserIdAndCheckJWT(user)
+	if err != nil {
+		return err
+	}
 
 	var payload *dtos.EditTournament
 	err = c.BodyParser(&payload)
@@ -108,6 +111,9 @@ func (cr *TournamentController) EditTournament(c *fiber.Ctx) error {
 func (cr *TournamentController) DeleteTournament(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	userId, err := validator.GetUserIdAndCheckJWT(user)
+	if err != nil {
+		return err
+	}
 
 	tournamentIdString := c.Params("tournamentId")
 	err = cr.TournamentService.DeleteTournament(userId, tournamentIdString)
@@ -149,8 +155,7 @@ func (cr *TournamentController) DeleteTournaments(c *fiber.Ctx) error {
 		return err
 	}
 
-	return response.MessageResponse(c, fiber.StatusOK,
-		fmt.Sprint("Successfully deleted tournaments"))
+	return response.MessageResponse(c, fiber.StatusOK, "Successfully deleted tournaments")
 }
 
 // GetAllTournaments
@@ -234,6 +239,9 @@ func (cr *TournamentController) GetTournamentTiktoks(c *fiber.Ctx) error {
 func (cr *TournamentController) TournamentWinner(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	_, err := validator.GetUserIdAndCheckJWT(user)
+	if err != nil {
+		return err
+	}
 
 	tournamentIdString := c.Params("tournamentId")
 
