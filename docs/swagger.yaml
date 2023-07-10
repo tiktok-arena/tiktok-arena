@@ -282,7 +282,6 @@ paths:
       summary: Tournament details
       tags:
       - tournament
-  /tournament/{tournamentId}:
     put:
       consumes:
       - application/json
@@ -310,7 +309,7 @@ paths:
       summary: Update tournament winner statistics
       tags:
       - tournament
-  /tournament/contests/{tournamentId}:
+  /tournament/contests:
     get:
       consumes:
       - application/json
@@ -423,7 +422,7 @@ paths:
       summary: Edit tournament
       tags:
       - tournament
-  /tournament/tiktoks/{tournamentId}:
+  /tournament/tiktoks:
     get:
       consumes:
       - application/json

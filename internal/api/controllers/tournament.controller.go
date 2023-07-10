@@ -170,7 +170,7 @@ func (cr *TournamentController) DeleteTournaments(c *fiber.Ctx) error {
 //	@Param			search				query		string						false	"search"
 //	@Success		200					{array}		dtos.TournamentsResponse	"Contest bracket"
 //	@Failure		400					{object}	dtos.MessageResponseType	"Failed to return tournament contests"
-//	@Router			/tournament [get]																																																																																																																																																																																																																																																				[get]
+//	@Router			/tournament [get]																																																																																																																																																																																																																																																												[get]
 func (cr *TournamentController) GetAllTournaments(c *fiber.Ctx) error {
 	q := new(dtos.PaginationQueries)
 	if err := c.QueryParser(q); err != nil {
@@ -214,7 +214,7 @@ func (cr *TournamentController) GetTournamentDetails(c *fiber.Ctx) error {
 //	@Param			tournamentId	path		string						true	"Tournament id"
 //	@Success		200				{array}		models.Tiktok				"Tournament tiktoks"
 //	@Failure		400				{object}	dtos.MessageResponseType	"Tournament not found"
-//	@Router			/tournament/tiktoks/{tournamentId} [get]
+//	@Router			/tournament/tiktoks [get]
 func (cr *TournamentController) GetTournamentTiktoks(c *fiber.Ctx) error {
 	tournamentIdString := c.Params("tournamentId")
 	tiktoks, err := cr.TournamentService.GetTournamentTiktoks(tournamentIdString)
@@ -235,7 +235,7 @@ func (cr *TournamentController) GetTournamentTiktoks(c *fiber.Ctx) error {
 //	@Param			payload	body		dtos.CreateTournament		true	"Data to update tournament winner"
 //	@Success		200		{object}	dtos.MessageResponseType	"Winner updated"
 //	@Failure		400		{object}	dtos.MessageResponseType	"Error during winner updating"
-//	@Router			/tournament/{tournamentId} [put]
+//	@Router			/tournament [put]
 func (cr *TournamentController) TournamentWinner(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	_, err := validator.GetUserIdAndCheckJWT(user)
@@ -271,7 +271,7 @@ func (cr *TournamentController) TournamentWinner(c *fiber.Ctx) error {
 //	@Param			payload			query		dtos.ContestPayload			true	"Contest type"
 //	@Success		200				{object}	dtos.Contest				"Contest bracket"
 //	@Failure		400				{object}	dtos.MessageResponseType	"Failed to return tournament contests"
-//	@Router			/tournament/contests/{tournamentId} [get]
+//	@Router			/tournament/contests [get]
 func (cr *TournamentController) GetTournamentContest(c *fiber.Ctx) error {
 	tournamentIdString := c.Params("tournamentId")
 	contestType := c.Query("type")

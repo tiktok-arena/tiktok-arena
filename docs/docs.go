@@ -165,9 +165,52 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Increment wins and increment times_played",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "Update tournament winner statistics",
+                "parameters": [
+                    {
+                        "description": "Data to update tournament winner",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.CreateTournament"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Winner updated",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    },
+                    "400": {
+                        "description": "Error during winner updating",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    }
+                }
             }
         },
-        "/tournament/contests/{tournamentId}": {
+        "/tournament/contests": {
             "get": {
                 "description": "Get tournament contests",
                 "consumes": [
@@ -346,7 +389,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/tournament/tiktoks/{tournamentId}": {
+        "/tournament/tiktoks": {
             "get": {
                 "description": "Get tournament tiktoks",
                 "consumes": [
@@ -380,51 +423,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Tournament not found",
-                        "schema": {
-                            "$ref": "#/definitions/dtos.MessageResponseType"
-                        }
-                    }
-                }
-            }
-        },
-        "/tournament/{tournamentId}": {
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Increment wins and increment times_played",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tournament"
-                ],
-                "summary": "Update tournament winner statistics",
-                "parameters": [
-                    {
-                        "description": "Data to update tournament winner",
-                        "name": "payload",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dtos.CreateTournament"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Winner updated",
-                        "schema": {
-                            "$ref": "#/definitions/dtos.MessageResponseType"
-                        }
-                    },
-                    "400": {
-                        "description": "Error during winner updating",
                         "schema": {
                             "$ref": "#/definitions/dtos.MessageResponseType"
                         }
