@@ -6,5 +6,5 @@ type EmptyJWTError struct {
 }
 
 func (e EmptyJWTError) Error() string {
-	return fmt.Sprintf("Empty JWT")
+	return fmt.Sprint("Empty JWT")
 }

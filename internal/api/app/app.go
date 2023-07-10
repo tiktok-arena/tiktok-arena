@@ -14,11 +14,11 @@ import (
 	"tiktok-arena/internal/data/repository"
 )
 
-//	@title			TikTok arena API
-//	@version		1.0
-//	@description	API for TikTok arena application
-//	@host			localhost:8000
-//	@BasePath		/api
+// @title			TikTok arena API
+// @version		1.0
+// @description	API for TikTok arena application
+// @host			tiktok-arena.onrender.com
+// @BasePath		/api
 func Run(c *configuration.EnvConfigModel) {
 
 	db := database.ConnectDB(c)

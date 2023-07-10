@@ -150,7 +150,7 @@ func (cr *TournamentController) DeleteTournaments(c *fiber.Ctx) error {
 	}
 
 	return response.MessageResponse(c, fiber.StatusOK,
-		fmt.Sprintf("Successfully deleted tournaments"))
+		fmt.Sprint("Successfully deleted tournaments"))
 }
 
 // GetAllTournaments
