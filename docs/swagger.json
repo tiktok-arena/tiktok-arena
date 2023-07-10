@@ -1,8 +1,13 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "API for TikTok arena application",
+        "title": "TikTok arena API",
+        "contact": {},
+        "version": "1.0"
     },
+    "host": "tiktok-arena.onrender.com",
+    "basePath": "/api",
     "paths": {
         "/auth/login": {
             "post": {
@@ -162,7 +167,7 @@
                         }
                     },
                     "400": {
-                        "description": "Failed to return tournament contest",
+                        "description": "Failed to return tournament contests",
                         "schema": {
                             "$ref": "#/definitions/dtos.MessageResponseType"
                         }
@@ -170,9 +175,9 @@
                 }
             }
         },
-        "/tournament/contest/{tournamentId}": {
+        "/tournament/contests/{tournamentId}": {
             "get": {
-                "description": "Get tournament contest",
+                "description": "Get tournament contests",
                 "consumes": [
                     "application/json"
                 ],
@@ -182,7 +187,7 @@
                 "tags": [
                     "tournament"
                 ],
-                "summary": "Tournament contest",
+                "summary": "Tournament contests",
                 "parameters": [
                     {
                         "type": "string",
@@ -206,7 +211,7 @@
                         }
                     },
                     "400": {
-                        "description": "Failed to return tournament contest",
+                        "description": "Failed to return tournament contests",
                         "schema": {
                             "$ref": "#/definitions/dtos.MessageResponseType"
                         }
