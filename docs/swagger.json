@@ -1,13 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "API for TikTok arena application",
-        "title": "TikTok arena API",
-        "contact": {},
-        "version": "1.0"
+        "contact": {}
     },
-    "host": "tiktok-arena.onrender.com",
-    "basePath": "/api",
     "paths": {
         "/auth/login": {
             "post": {
@@ -161,11 +156,6 @@
                 }
             },
             "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Increment wins and increment times_played",
                 "consumes": [
                     "application/json"

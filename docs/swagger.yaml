@@ -1,4 +1,3 @@
-basePath: /api
 definitions:
   dtos.AuthInput:
     properties:
@@ -177,12 +176,8 @@ definitions:
       photoURL:
         type: string
     type: object
-host: tiktok-arena.onrender.com
 info:
   contact: {}
-  description: API for TikTok arena application
-  title: TikTok arena API
-  version: "1.0"
 paths:
   /auth/login:
     post:
@@ -304,8 +299,6 @@ paths:
           description: Error during winner updating
           schema:
             $ref: '#/definitions/dtos.MessageResponseType'
-      security:
-      - ApiKeyAuth: []
       summary: Update tournament winner statistics
       tags:
       - tournament
