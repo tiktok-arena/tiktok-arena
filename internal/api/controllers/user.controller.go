@@ -9,8 +9,8 @@ import (
 )
 
 type UserService interface {
-	TournamentsOfUser(id uuid.UUID, queries *dtos.PaginationQueries) (response dtos.TournamentsResponse, err error)
-	ChangeUserPhoto(change *dtos.ChangePhotoURL, userId uuid.UUID) (err error)
+	TournamentsOfUser(id uuid.UUID, queries dtos.PaginationQueries) (response dtos.TournamentsResponse, err error)
+	ChangeUserPhoto(change dtos.ChangePhotoURL, userId uuid.UUID) (err error)
 }
 
 type UserController struct {
@@ -49,7 +49,7 @@ func (cr *UserController) TournamentsOfUser(c *fiber.Ctx) error {
 	}
 	dtos.ValidatePaginationQueries(payload)
 
-	tournamentsResponse, err := cr.UserService.TournamentsOfUser(userId, payload)
+	tournamentsResponse, err := cr.UserService.TournamentsOfUser(userId, *payload)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func (cr *UserController) ChangeUserPhoto(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	var payload *dtos.ChangePhotoURL
+	var payload dtos.ChangePhotoURL
 	err = c.BodyParser(&payload)
 	if err != nil {
 		return err

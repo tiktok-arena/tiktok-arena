@@ -30,10 +30,10 @@ func (r *UserRepository) UserExists(username string) (bool, error) {
 	if record.Error == gorm.ErrRecordNotFound {
 		return false, nil
 	}
-	return user.ID != nil, record.Error
+	return user.ID != uuid.Nil, record.Error
 }
 
-func (r *UserRepository) CreateUser(newUser *models.User) error {
+func (r *UserRepository) CreateUser(newUser models.User) error {
 	record := r.db.
 		Create(&newUser)
 	return record.Error

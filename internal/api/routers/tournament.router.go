@@ -14,7 +14,7 @@ func NewTournamentRouter(c *controllers.TournamentController) func(router fiber.
 		router.Put("/edit/:tournamentId", middleware.Protected(), c.EditTournament)
 		router.Delete("/delete/:tournamentId", middleware.Protected(), c.DeleteTournament)
 		router.Delete("/delete", middleware.Protected(), c.DeleteTournaments)
-		router.Get("/tiktoks/:tournamentId", c.GetTournamentTiktoks)
+		router.Get("/tiktoks/:tournamentId", c.GetTournamentStats)
 		router.Get("/:tournamentId", c.GetTournamentDetails)
 		router.Put("/:tournamentId", c.TournamentWinner)
 	}

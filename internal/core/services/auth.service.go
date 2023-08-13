@@ -14,7 +14,7 @@ import (
 type AuthServiceUserRepository interface {
 	GetUserByName(username string) (models.User, error)
 	UserExists(username string) (bool, error)
-	CreateUser(newUser *models.User) error
+	CreateUser(newUser models.User) error
 	GetUserPhoto(id string) (string, error)
 }
 
@@ -26,7 +26,7 @@ func NewAuthService(userRepository AuthServiceUserRepository) *AuthService {
 	return &AuthService{UserRepository: userRepository}
 }
 
-func (s *AuthService) NewUser(auth *dtos.AuthInput) (details dtos.RegisterDetails, err error) {
+func (s *AuthService) NewUser(auth dtos.AuthInput) (details dtos.RegisterDetails, err error) {
 	err = validator.ValidateStruct(auth)
 	if err != nil {
 		return details, ValidateError{err}
@@ -47,12 +47,12 @@ func (s *AuthService) NewUser(auth *dtos.AuthInput) (details dtos.RegisterDetail
 		Name:     auth.Name,
 		Password: string(hashedPassword),
 	}
-	err = s.UserRepository.CreateUser(&newUser)
+	err = s.UserRepository.CreateUser(newUser)
 	if err != nil {
 		return details, RepositoryError{err}
 	}
 
-	token, err := UserJwtToken(*newUser.ID, newUser.Name)
+	token, err := UserJwtToken(newUser.ID, newUser.Name)
 	if err != nil {
 		return details, JWTGenerateError{err}
 	}
@@ -64,7 +64,7 @@ func (s *AuthService) NewUser(auth *dtos.AuthInput) (details dtos.RegisterDetail
 	}, err
 }
 
-func (s *AuthService) GetUserByNameAndPassword(input *dtos.AuthInput) (details dtos.LoginDetails, err error) {
+func (s *AuthService) GetUserByNameAndPassword(input dtos.AuthInput) (details dtos.LoginDetails, err error) {
 	err = validator.ValidateStruct(input)
 	if err != nil {
 		return details, ValidateError{err}
@@ -80,7 +80,7 @@ func (s *AuthService) GetUserByNameAndPassword(input *dtos.AuthInput) (details d
 		return details, BcryptError{err}
 	}
 
-	token, err := UserJwtToken(*user.ID, user.Name)
+	token, err := UserJwtToken(user.ID, user.Name)
 
 	if err != nil {
 		return details, JWTGenerateError{err}
@@ -95,7 +95,7 @@ func (s *AuthService) GetUserByNameAndPassword(input *dtos.AuthInput) (details d
 
 }
 
-func (s *AuthService) WhoAmI(token *jwt.Token) (whoami dtos.WhoAmI, err error) {
+func (s *AuthService) WhoAmI(token jwt.Token) (whoami dtos.WhoAmI, err error) {
 	claims := token.Claims.(jwt.MapClaims)
 
 	username := claims["name"].(string)

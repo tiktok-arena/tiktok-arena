@@ -10,7 +10,7 @@ import (
 // First match decided randomly between two participators.
 // Loser of match leaves the game, winner will go to next match, next opponent decided randomly from standings.
 // Procedure continues until last standing.
-func KingOfTheHill(t []models.Tiktok) *dtos.Contest {
+func KingOfTheHill(t []models.Tiktok) dtos.Contest {
 	countTiktok := len(t)
 	rounds := make([]dtos.Round, 0, countTiktok-1)
 	match := dtos.Match{
@@ -35,7 +35,7 @@ func KingOfTheHill(t []models.Tiktok) *dtos.Contest {
 		})
 		previousMatch = match
 	}
-	return &dtos.Contest{
+	return dtos.Contest{
 		CountMatches: countTiktok - 1,
 		Rounds:       rounds,
 	}

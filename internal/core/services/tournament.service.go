@@ -10,13 +10,13 @@ import (
 )
 
 type TournamentServiceTournamentRepository interface {
-	GetTournamentById(tournamentId uuid.UUID) (*models.Tournament, error)
+	GetTournamentById(tournamentId uuid.UUID) (models.Tournament, error)
 	CheckIfTournamentExistsByName(name string) (bool, error)
 	CheckIfNameIsTakenByOtherTournament(name string, id uuid.UUID) (bool, error)
 	CheckIfTournamentExistsById(id uuid.UUID) (bool, error)
 	CheckIfTournamentsExistsByIds(ids []string, userId uuid.UUID) (bool, error)
-	CreateNewTournament(newTournament *models.Tournament) error
-	EditTournament(t *models.Tournament) error
+	CreateNewTournament(newTournament models.Tournament) error
+	EditTournament(t models.Tournament) error
 	DeleteTournamentById(id uuid.UUID, userId uuid.UUID) error
 	DeleteTournamentsByIds(ids []string, userId uuid.UUID) error
 	GetTournaments(totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error)
@@ -25,12 +25,12 @@ type TournamentServiceTournamentRepository interface {
 }
 
 type TournamentServiceTiktokRepository interface {
-	CreateNewTiktok(newTiktok *models.Tiktok) error
+	CreateNewTiktok(newTiktok models.Tiktok) error
 	CreateNewTiktoks(t []models.Tiktok) error
-	EditTiktok(t *models.Tiktok) error
-	DeleteTiktoks(t *[]models.Tiktok) error
+	EditTiktok(t models.Tiktok) error
+	DeleteTiktoks(t []models.Tiktok) error
 	DeleteTiktoksByIds(ids []string) error
-	GetTournamentTiktoksById(tournamentId uuid.UUID) (*[]models.Tiktok, error)
+	GetTournamentTiktoksById(tournamentId uuid.UUID) ([]models.Tiktok, error)
 	UpdateTiktokWins(tournamentId uuid.UUID, tiktokURL string) error
 }
 
@@ -44,7 +44,7 @@ func NewTournamentService(tournamentRepository TournamentServiceTournamentReposi
 	return &TournamentService{TournamentRepository: tournamentRepository, TiktokRepository: tiktokRepository}
 }
 
-func (s *TournamentService) CreateTournament(create *dtos.CreateTournament, userId uuid.UUID) error {
+func (s *TournamentService) CreateTournament(create dtos.CreateTournament, userId uuid.UUID) error {
 	err := validator.ValidateStruct(create)
 	if err != nil {
 		return ValidateError{err}
@@ -68,25 +68,25 @@ func (s *TournamentService) CreateTournament(create *dtos.CreateTournament, user
 	}
 
 	newTournament := models.Tournament{
-		ID:       &newTournamentId,
+		ID:       newTournamentId,
 		Name:     create.Name,
-		UserID:   &userId,
+		UserID:   userId,
 		Size:     create.Size,
 		PhotoURL: create.PhotoURL,
 	}
-	err = s.TournamentRepository.CreateNewTournament(&newTournament)
+	err = s.TournamentRepository.CreateNewTournament(newTournament)
 	if err != nil {
 		return RepositoryError{err}
 	}
 
 	for _, value := range create.Tiktoks {
 		tiktok := models.Tiktok{
-			TournamentID: &newTournamentId,
+			TournamentID: newTournamentId,
 			Name:         value.Name,
 			URL:          value.URL,
 			Wins:         0,
 		}
-		err = s.TiktokRepository.CreateNewTiktok(&tiktok)
+		err = s.TiktokRepository.CreateNewTiktok(tiktok)
 		if err != nil {
 			return RepositoryError{err}
 		}
@@ -95,7 +95,7 @@ func (s *TournamentService) CreateTournament(create *dtos.CreateTournament, user
 	return nil
 }
 
-func (s *TournamentService) EditTournament(edit *dtos.EditTournament, userId uuid.UUID, tournamentIdString string) error {
+func (s *TournamentService) EditTournament(edit dtos.EditTournament, userId uuid.UUID, tournamentIdString string) error {
 	err := validator.ValidateStruct(edit)
 	if err != nil {
 		return ValidateError{err}
@@ -138,14 +138,14 @@ func (s *TournamentService) EditTournament(edit *dtos.EditTournament, userId uui
 	}
 
 	editedTournament := models.Tournament{
-		ID:       &tournamentIdUUID,
+		ID:       tournamentIdUUID,
 		Name:     edit.Name,
-		UserID:   &userId,
+		UserID:   userId,
 		Size:     edit.Size,
 		PhotoURL: edit.PhotoURL,
 	}
 
-	err = s.TournamentRepository.EditTournament(&editedTournament)
+	err = s.TournamentRepository.EditTournament(editedTournament)
 	if err != nil {
 		return RepositoryError{err}
 	}
@@ -153,13 +153,13 @@ func (s *TournamentService) EditTournament(edit *dtos.EditTournament, userId uui
 	var newS []models.Tiktok
 	for _, value := range edit.Tiktoks {
 		tiktok := models.Tiktok{
-			TournamentID: &tournamentIdUUID,
+			TournamentID: tournamentIdUUID,
 			Name:         value.Name,
 			URL:          value.URL,
 			Wins:         0,
 		}
-		if models.ContainsTiktok(*oldS, tiktok) {
-			err = s.TiktokRepository.EditTiktok(&tiktok)
+		if models.ContainsTiktok(oldS, tiktok) {
+			err = s.TiktokRepository.EditTiktok(tiktok)
 			if err != nil {
 				return RepositoryError{err}
 			}
@@ -167,15 +167,15 @@ func (s *TournamentService) EditTournament(edit *dtos.EditTournament, userId uui
 		newS = append(newS, tiktok)
 	}
 
-	tiktoksToDelete := models.FindDifferenceOfTwoTiktokSlices(*oldS, newS)
+	tiktoksToDelete := models.FindDifferenceOfTwoTiktokSlices(oldS, newS)
 	if len(tiktoksToDelete) != 0 {
-		err = s.TiktokRepository.DeleteTiktoks(&tiktoksToDelete)
+		err = s.TiktokRepository.DeleteTiktoks(tiktoksToDelete)
 		if err != nil {
 			return RepositoryError{err}
 		}
 	}
 
-	tiktoksToCreate := models.FindDifferenceOfTwoTiktokSlices(newS, *oldS)
+	tiktoksToCreate := models.FindDifferenceOfTwoTiktokSlices(newS, oldS)
 	if len(tiktoksToCreate) != 0 {
 		err = s.TiktokRepository.CreateNewTiktoks(tiktoksToCreate)
 		if err != nil {
@@ -224,7 +224,7 @@ func (s *TournamentService) DeleteTournament(userId uuid.UUID, tournamentIdStrin
 	return nil
 }
 
-func (s *TournamentService) DeleteTournaments(userId uuid.UUID, tournamentIds *dtos.TournamentIds) error {
+func (s *TournamentService) DeleteTournaments(userId uuid.UUID, tournamentIds dtos.TournamentIds) error {
 	err := validator.ValidateStruct(tournamentIds)
 	if err != nil {
 		return ValidateError{err}
@@ -248,19 +248,19 @@ func (s *TournamentService) DeleteTournaments(userId uuid.UUID, tournamentIds *d
 	return nil
 }
 
-func (s *TournamentService) GetAllTournaments(queries *dtos.PaginationQueries) (response dtos.TournamentsResponse, err error) {
+func (s *TournamentService) GetAllTournaments(queries dtos.PaginationQueries) (response dtos.TournamentsResponse, err error) {
 	countTournaments, err := s.TournamentRepository.TotalTournaments()
 	if err != nil {
 		return response, RepositoryError{err}
 	}
-	response, err = s.TournamentRepository.GetTournaments(countTournaments, *queries)
+	response, err = s.TournamentRepository.GetTournaments(countTournaments, queries)
 	if err != nil {
 		return response, RepositoryError{err}
 	}
 	return
 }
 
-func (s *TournamentService) GetTournament(tournamentIdString string) (tournament *models.Tournament, err error) {
+func (s *TournamentService) GetTournament(tournamentIdString string) (tournament models.Tournament, err error) {
 	if tournamentIdString == "" {
 		return tournament, EmptyTournamentIdError{}
 	}
@@ -275,22 +275,31 @@ func (s *TournamentService) GetTournament(tournamentIdString string) (tournament
 	return
 }
 
-func (s *TournamentService) GetTournamentTiktoks(tournamentIdString string) (tiktoks *[]models.Tiktok, err error) {
+func (s *TournamentService) GetTournamentStats(tournamentIdString string) (tournamentStats dtos.TournamentStats, err error) {
 	if tournamentIdString == "" {
-		return tiktoks, EmptyTournamentIdError{}
+		return tournamentStats, EmptyTournamentIdError{}
 	}
 	tournamentIdUUID, err := uuid.Parse(tournamentIdString)
 	if err != nil {
-		return tiktoks, UUIDError{err}
+		return tournamentStats, UUIDError{err}
 	}
-	tiktoks, err = s.TiktokRepository.GetTournamentTiktoksById(tournamentIdUUID)
+	tiktoks, err := s.TiktokRepository.GetTournamentTiktoksById(tournamentIdUUID)
 	if err != nil {
-		return tiktoks, RepositoryError{err}
+		return tournamentStats, RepositoryError{err}
 	}
+	tournamentStats.TournamentId = tournamentIdUUID
+	for _, tiktok := range tiktoks {
+		tournamentStats.TiktoksStats = append(tournamentStats.TiktoksStats, dtos.TiktokStats{
+			Name: tiktok.Name,
+			URL:  tiktok.URL,
+			Wins: tiktok.Wins,
+		})
+	}
+
 	return
 }
 
-func (s *TournamentService) TournamentWinner(tournamentIdString string, winner *dtos.TournamentWinner) error {
+func (s *TournamentService) TournamentWinner(tournamentIdString string, winner dtos.TournamentWinner) error {
 	if tournamentIdString == "" {
 		return EmptyTournamentIdError{}
 	}
@@ -318,7 +327,7 @@ func (s *TournamentService) TournamentWinner(tournamentIdString string, winner *
 	return nil
 }
 
-func (s *TournamentService) GetTournamentContest(tournamentIdString string, bracketType string) (bracket *dtos.Contest, err error) {
+func (s *TournamentService) GetTournamentContest(tournamentIdString string, bracketType string) (bracket dtos.Contest, err error) {
 	if tournamentIdString == "" {
 		return bracket, EmptyTournamentIdError{}
 	}
@@ -335,12 +344,12 @@ func (s *TournamentService) GetTournamentContest(tournamentIdString string, brac
 	if err != nil {
 		return bracket, RepositoryError{err}
 	}
-	models.ShuffleTiktok(*tiktoks)
+	models.ShuffleTiktok(tiktoks)
 	if bracketType == dtos.SingleElimination {
-		return contests.SingleElimination(*tiktoks), err
+		return contests.SingleElimination(tiktoks), err
 	}
 	if bracketType == dtos.KingOfTheHill {
-		return contests.KingOfTheHill(*tiktoks), err
+		return contests.KingOfTheHill(tiktoks), err
 	}
 	return
 }

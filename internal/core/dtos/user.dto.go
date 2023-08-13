@@ -12,13 +12,13 @@ type AuthInput struct {
 }
 
 type RegisterDetails struct {
-	ID       *uuid.UUID
+	ID       uuid.UUID
 	Username string
 	Token    string
 }
 
 type LoginDetails struct {
-	ID       *uuid.UUID
+	ID       uuid.UUID
 	Username string
 	Token    string
 	PhotoURL string

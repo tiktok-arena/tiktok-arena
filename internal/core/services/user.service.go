@@ -8,7 +8,7 @@ import (
 
 type UserServiceTournamentRepository interface {
 	TotalTournamentsByUserId(id uuid.UUID) (int64, error)
-	GetAllTournamentsForUserById(id uuid.UUID, totalTournaments int64, queries *dtos.PaginationQueries) (dtos.TournamentsResponse, error)
+	GetAllTournamentsForUserById(id uuid.UUID, totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error)
 }
 
 type UserServiceUserRepository interface {
@@ -24,7 +24,7 @@ func NewUserService(userRepository UserServiceUserRepository, tournamentReposito
 	return &UserService{UserRepository: userRepository, TournamentRepository: tournamentRepository}
 }
 
-func (s *UserService) TournamentsOfUser(id uuid.UUID, queries *dtos.PaginationQueries) (response dtos.TournamentsResponse, err error) {
+func (s *UserService) TournamentsOfUser(id uuid.UUID, queries dtos.PaginationQueries) (response dtos.TournamentsResponse, err error) {
 	countTournamentsForUser, err := s.TournamentRepository.TotalTournamentsByUserId(id)
 	if err != nil {
 		return response, RepositoryError{err}
@@ -36,7 +36,7 @@ func (s *UserService) TournamentsOfUser(id uuid.UUID, queries *dtos.PaginationQu
 	return
 }
 
-func (s *UserService) ChangeUserPhoto(change *dtos.ChangePhotoURL, userId uuid.UUID) (err error) {
+func (s *UserService) ChangeUserPhoto(change dtos.ChangePhotoURL, userId uuid.UUID) (err error) {
 	err = validator.ValidateStruct(change)
 	if err != nil {
 		return ValidateError{err}

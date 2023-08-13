@@ -16,11 +16,11 @@ func NewTournamentRepository(db *gorm.DB) *TournamentRepository {
 	return &TournamentRepository{db: db}
 }
 
-func (r *TournamentRepository) GetTournamentById(tournamentId uuid.UUID) (*models.Tournament, error) {
+func (r *TournamentRepository) GetTournamentById(tournamentId uuid.UUID) (models.Tournament, error) {
 	var tournament *models.Tournament
 	record := r.db.
 		First(&tournament, "id = ?", tournamentId)
-	return tournament, record.Error
+	return *tournament, record.Error
 }
 
 func (r *TournamentRepository) CheckIfTournamentExistsByName(name string) (bool, error) {
@@ -31,7 +31,7 @@ func (r *TournamentRepository) CheckIfTournamentExistsByName(name string) (bool,
 	if record.Error == gorm.ErrRecordNotFound {
 		return false, nil
 	}
-	return tournament.ID != nil, record.Error
+	return tournament.ID != uuid.Nil, record.Error
 }
 
 func (r *TournamentRepository) CheckIfNameIsTakenByOtherTournament(name string, id uuid.UUID) (bool, error) {
@@ -39,7 +39,7 @@ func (r *TournamentRepository) CheckIfNameIsTakenByOtherTournament(name string, 
 	record := r.db.
 		Select("id").
 		First(&tournament, "name = ? AND id != ?", name, id)
-	return tournament.ID != nil, record.Error
+	return tournament.ID != uuid.Nil, record.Error
 }
 
 func (r *TournamentRepository) CheckIfTournamentExistsById(id uuid.UUID) (bool, error) {
@@ -47,7 +47,7 @@ func (r *TournamentRepository) CheckIfTournamentExistsById(id uuid.UUID) (bool, 
 	record := r.db.
 		Select("id").
 		First(&tournament, "id = ?", id)
-	return tournament.ID != nil, record.Error
+	return tournament.ID != uuid.Nil, record.Error
 }
 
 func (r *TournamentRepository) CheckIfTournamentsExistsByIds(ids []string, userId uuid.UUID) (bool, error) {
@@ -61,13 +61,13 @@ func (r *TournamentRepository) CheckIfTournamentsExistsByIds(ids []string, userI
 	return true, record.Error
 }
 
-func (r *TournamentRepository) CreateNewTournament(newTournament *models.Tournament) error {
+func (r *TournamentRepository) CreateNewTournament(newTournament models.Tournament) error {
 	record := r.db.
 		Create(&newTournament)
 	return record.Error
 }
 
-func (r *TournamentRepository) EditTournament(t *models.Tournament) error {
+func (r *TournamentRepository) EditTournament(t models.Tournament) error {
 	record := r.db.
 		Model(&models.Tournament{}).
 		Where("id = ?", &t.ID).
@@ -98,7 +98,7 @@ func (r *TournamentRepository) GetTournaments(totalTournaments int64, queries dt
 	return dtos.TournamentsResponse{TournamentCount: totalTournaments, Tournaments: tournaments}, record.Error
 }
 
-func (r *TournamentRepository) GetAllTournamentsForUserById(id uuid.UUID, totalTournaments int64, queries *dtos.PaginationQueries) (dtos.TournamentsResponse, error) {
+func (r *TournamentRepository) GetAllTournamentsForUserById(id uuid.UUID, totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error) {
 	var tournaments []models.Tournament
 	record := r.db.
 		Where("user_id = ?", id).

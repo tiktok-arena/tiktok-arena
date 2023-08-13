@@ -7,7 +7,7 @@ import (
 )
 
 type Tiktok struct {
-	TournamentID *uuid.UUID  `gorm:"not null;primaryKey;default:null"`
+	TournamentID uuid.UUID   `gorm:"not null;primaryKey;default:null"`
 	Tournament   *Tournament `gorm:"foreignKey:TournamentID"`
 	Name         string      `gorm:"not null;default:null"`
 	URL          string      `gorm:"not null;primaryKey;default:null"`

@@ -9,7 +9,7 @@ import (
 
 // SingleElimination
 // https://en.wikipedia.org/wiki/Single-elimination_tournament
-func SingleElimination(t []models.Tiktok) *dtos.Contest {
+func SingleElimination(t []models.Tiktok) dtos.Contest {
 	countTiktok := len(t)
 	countRound := int(math.Ceil(math.Log2(float64(countTiktok))))
 	countSecondRoundParticipators := 1 << (countRound - 1) // Equivalent to int(math.Pow(2, float64(countRound)) / 2)
@@ -88,7 +88,7 @@ func SingleElimination(t []models.Tiktok) *dtos.Contest {
 
 		previousRoundMatches = currentRoundMatches
 	}
-	return &dtos.Contest{
+	return dtos.Contest{
 		CountMatches: countTiktok - 1,
 		Rounds:       rounds,
 	}

@@ -11,15 +11,15 @@ import (
 )
 
 type TournamentService interface {
-	CreateTournament(create *dtos.CreateTournament, userId uuid.UUID) error
-	EditTournament(edit *dtos.EditTournament, userId uuid.UUID, tournamentIdString string) error
+	CreateTournament(create dtos.CreateTournament, userId uuid.UUID) error
+	EditTournament(edit dtos.EditTournament, userId uuid.UUID, tournamentIdString string) error
 	DeleteTournament(userId uuid.UUID, tournamentIdString string) error
-	DeleteTournaments(userId uuid.UUID, tournamentIds *dtos.TournamentIds) error
-	GetAllTournaments(queries *dtos.PaginationQueries) (response dtos.TournamentsResponse, err error)
-	GetTournament(tournamentIdString string) (tournament *models.Tournament, err error)
-	GetTournamentTiktoks(tournamentIdString string) (tiktoks *[]models.Tiktok, err error)
-	TournamentWinner(tournamentIdString string, winner *dtos.TournamentWinner) error
-	GetTournamentContest(tournamentIdString string, contestType string) (bracket *dtos.Contest, err error)
+	DeleteTournaments(userId uuid.UUID, tournamentIds dtos.TournamentIds) error
+	GetAllTournaments(queries dtos.PaginationQueries) (response dtos.TournamentsResponse, err error)
+	GetTournament(tournamentIdString string) (tournament models.Tournament, err error)
+	GetTournamentStats(tournamentIdString string) (tournamentStats dtos.TournamentStats, err error)
+	TournamentWinner(tournamentIdString string, winner dtos.TournamentWinner) error
+	GetTournamentContest(tournamentIdString string, contestType string) (bracket dtos.Contest, err error)
 }
 
 type TournamentController struct {
@@ -49,7 +49,7 @@ func (cr *TournamentController) CreateTournament(c *fiber.Ctx) error {
 		return err
 	}
 
-	var payload *dtos.CreateTournament
+	var payload dtos.CreateTournament
 	err = c.BodyParser(&payload)
 	if err != nil {
 		return err
@@ -82,7 +82,7 @@ func (cr *TournamentController) EditTournament(c *fiber.Ctx) error {
 		return err
 	}
 
-	var payload *dtos.EditTournament
+	var payload dtos.EditTournament
 	err = c.BodyParser(&payload)
 	if err != nil {
 		return err
@@ -144,7 +144,7 @@ func (cr *TournamentController) DeleteTournaments(c *fiber.Ctx) error {
 		return err
 	}
 
-	var payload *dtos.TournamentIds
+	var payload dtos.TournamentIds
 	err = c.BodyParser(&payload)
 	if err != nil {
 		return err
@@ -177,7 +177,7 @@ func (cr *TournamentController) GetAllTournaments(c *fiber.Ctx) error {
 		return err
 	}
 	dtos.ValidatePaginationQueries(q)
-	tournamentResponse, err := cr.TournamentService.GetAllTournaments(q)
+	tournamentResponse, err := cr.TournamentService.GetAllTournaments(*q)
 	if err != nil {
 		return err
 	}
@@ -204,7 +204,7 @@ func (cr *TournamentController) GetTournamentDetails(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(tournament)
 }
 
-// GetTournamentTiktoks
+// GetTournamentStats
 //
 //	@Summary		Tournament tiktoks
 //	@Description	Get tournament tiktoks
@@ -215,9 +215,9 @@ func (cr *TournamentController) GetTournamentDetails(c *fiber.Ctx) error {
 //	@Success		200				{array}		models.Tiktok				"Tournament tiktoks"
 //	@Failure		400				{object}	dtos.MessageResponseType	"Tournament not found"
 //	@Router			/tournament/tiktoks [get]
-func (cr *TournamentController) GetTournamentTiktoks(c *fiber.Ctx) error {
+func (cr *TournamentController) GetTournamentStats(c *fiber.Ctx) error {
 	tournamentIdString := c.Params("tournamentId")
-	tiktoks, err := cr.TournamentService.GetTournamentTiktoks(tournamentIdString)
+	tiktoks, err := cr.TournamentService.GetTournamentStats(tournamentIdString)
 	if err != nil {
 		return err
 	}
@@ -231,22 +231,15 @@ func (cr *TournamentController) GetTournamentTiktoks(c *fiber.Ctx) error {
 //	@Tags			tournament
 //	@Accept			json
 //	@Produce		json
-//	@Security		ApiKeyAuth
 //	@Param			payload	body		dtos.CreateTournament		true	"Data to update tournament winner"
 //	@Success		200		{object}	dtos.MessageResponseType	"Winner updated"
 //	@Failure		400		{object}	dtos.MessageResponseType	"Error during winner updating"
 //	@Router			/tournament [put]
 func (cr *TournamentController) TournamentWinner(c *fiber.Ctx) error {
-	user := c.Locals("user")
-	_, err := validator.GetUserIdAndCheckJWT(user)
-	if err != nil {
-		return err
-	}
-
 	tournamentIdString := c.Params("tournamentId")
 
-	var payload *dtos.TournamentWinner
-	err = c.BodyParser(&payload)
+	var payload dtos.TournamentWinner
+	err := c.BodyParser(&payload)
 	if err != nil {
 		return err
 	}

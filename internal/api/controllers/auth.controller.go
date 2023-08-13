@@ -7,9 +7,9 @@ import (
 )
 
 type AuthService interface {
-	NewUser(auth *dtos.AuthInput) (details dtos.RegisterDetails, err error)
-	GetUserByNameAndPassword(input *dtos.AuthInput) (details dtos.LoginDetails, err error)
-	WhoAmI(token *jwt.Token) (whoami dtos.WhoAmI, err error)
+	NewUser(auth dtos.AuthInput) (details dtos.RegisterDetails, err error)
+	GetUserByNameAndPassword(input dtos.AuthInput) (details dtos.LoginDetails, err error)
+	WhoAmI(token jwt.Token) (whoami dtos.WhoAmI, err error)
 }
 
 type AuthController struct {
@@ -32,7 +32,7 @@ func NewAuthController(authService AuthService) *AuthController {
 //	@Failure		400				{object}	dtos.MessageResponseType	"Failed to register user"
 //	@Router			/auth/register	[post]
 func (cr *AuthController) RegisterUser(c *fiber.Ctx) error {
-	var payload *dtos.AuthInput
+	var payload dtos.AuthInput
 
 	err := c.BodyParser(&payload)
 	if err != nil {
@@ -59,7 +59,7 @@ func (cr *AuthController) RegisterUser(c *fiber.Ctx) error {
 //	@Failure		400				{object}	dtos.MessageResponseType	"Error logging in"
 //	@Router			/auth/login    	[post]
 func (cr *AuthController) LoginUser(c *fiber.Ctx) error {
-	var payload *dtos.AuthInput
+	var payload dtos.AuthInput
 
 	err := c.BodyParser(&payload)
 	if err != nil {
@@ -86,7 +86,7 @@ func (cr *AuthController) LoginUser(c *fiber.Ctx) error {
 //	@Failure		400	{object}	dtos.MessageResponseType	"Error getting user data"
 //	@Router			/auth/whoami [get]
 func (cr *AuthController) WhoAmI(c *fiber.Ctx) error {
-	token := c.Locals("user").(*jwt.Token)
+	token := c.Locals("user").(jwt.Token)
 
 	whoami, err := cr.AuthService.WhoAmI(token)
 

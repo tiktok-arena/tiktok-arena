@@ -1,6 +1,7 @@
 package dtos
 
 import (
+	"github.com/google/uuid"
 	"tiktok-arena/internal/core/models"
 )
 
@@ -29,4 +30,9 @@ type EditTournament struct {
 	PhotoURL string         `validate:"required"`
 	Size     int            `validate:"gte=4,lte=64"`
 	Tiktoks  []CreateTiktok `validate:"required"`
+}
+
+type TournamentStats struct {
+	TournamentId uuid.UUID
+	TiktoksStats []TiktokStats
 }
