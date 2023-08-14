@@ -112,6 +112,13 @@ definitions:
     required:
     - tournamentIds
     type: object
+  dtos.TournamentWinner:
+    properties:
+      tiktokURL:
+        type: string
+    required:
+    - tiktokURL
+    type: object
   dtos.TournamentsResponse:
     properties:
       tournamentCount:
@@ -287,7 +294,7 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/dtos.CreateTournament'
+          $ref: '#/definitions/dtos.TournamentWinner'
       produces:
       - application/json
       responses:

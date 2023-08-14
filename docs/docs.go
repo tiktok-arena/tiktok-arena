@@ -185,7 +185,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dtos.CreateTournament"
+                            "$ref": "#/definitions/dtos.TournamentWinner"
                         }
                     }
                 ],
@@ -704,6 +704,17 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "dtos.TournamentWinner": {
+            "type": "object",
+            "required": [
+                "tiktokURL"
+            ],
+            "properties": {
+                "tiktokURL": {
+                    "type": "string"
                 }
             }
         },
