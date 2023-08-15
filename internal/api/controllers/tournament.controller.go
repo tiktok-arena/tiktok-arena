@@ -170,7 +170,7 @@ func (cr *TournamentController) DeleteTournaments(c *fiber.Ctx) error {
 //	@Param			search				query		string						false	"search"
 //	@Success		200					{array}		dtos.TournamentsResponse	"Contest bracket"
 //	@Failure		400					{object}	dtos.MessageResponseType	"Failed to return tournament contests"
-//	@Router			/tournament [get]																																																																																																																																																																																																																																																																												[get]
+//	@Router			/tournament [get]																																																																																																																																																																																																																																																																																				[get]
 func (cr *TournamentController) GetAllTournaments(c *fiber.Ctx) error {
 	q := new(dtos.PaginationQueries)
 	if err := c.QueryParser(q); err != nil {
@@ -234,7 +234,7 @@ func (cr *TournamentController) GetTournamentStats(c *fiber.Ctx) error {
 //	@Param			payload	body		dtos.TournamentWinner		true	"Data to update tournament winner"
 //	@Success		200		{object}	dtos.MessageResponseType	"Winner updated"
 //	@Failure		400		{object}	dtos.MessageResponseType	"Error during winner updating"
-//	@Router			/tournament [put]
+//	@Router			/winner/tournament [put]
 func (cr *TournamentController) TournamentWinner(c *fiber.Ctx) error {
 	tournamentIdString := c.Params("tournamentId")
 

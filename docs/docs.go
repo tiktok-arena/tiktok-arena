@@ -165,44 +165,6 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "put": {
-                "description": "Increment wins and increment times_played",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tournament"
-                ],
-                "summary": "Update tournament winner statistics",
-                "parameters": [
-                    {
-                        "description": "Data to update tournament winner",
-                        "name": "payload",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dtos.TournamentWinner"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Winner updated",
-                        "schema": {
-                            "$ref": "#/definitions/dtos.MessageResponseType"
-                        }
-                    },
-                    "400": {
-                        "description": "Error during winner updating",
-                        "schema": {
-                            "$ref": "#/definitions/dtos.MessageResponseType"
-                        }
-                    }
-                }
             }
         },
         "/tournament/contests": {
@@ -529,6 +491,46 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Couldn't get tournaments for specific user",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    }
+                }
+            }
+        },
+        "/winner/tournament": {
+            "put": {
+                "description": "Increment wins and increment times_played",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "Update tournament winner statistics",
+                "parameters": [
+                    {
+                        "description": "Data to update tournament winner",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.TournamentWinner"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Winner updated",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    },
+                    "400": {
+                        "description": "Error during winner updating",
                         "schema": {
                             "$ref": "#/definitions/dtos.MessageResponseType"
                         }

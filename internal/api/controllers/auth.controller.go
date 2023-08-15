@@ -86,9 +86,9 @@ func (cr *AuthController) LoginUser(c *fiber.Ctx) error {
 //	@Failure		400	{object}	dtos.MessageResponseType	"Error getting user data"
 //	@Router			/auth/whoami [get]
 func (cr *AuthController) WhoAmI(c *fiber.Ctx) error {
-	token := c.Locals("user").(jwt.Token)
+	token := c.Locals("user").(*jwt.Token)
 
-	whoami, err := cr.AuthService.WhoAmI(token)
+	whoami, err := cr.AuthService.WhoAmI(*token)
 
 	if err != nil {
 		return err

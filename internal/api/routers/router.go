@@ -6,10 +6,13 @@ import (
 	_ "tiktok-arena/docs"
 )
 
-func SetupRoutes(app *fiber.App,
-	tournamentRouter func(router fiber.Router),
-	authRouter func(router fiber.Router),
-	userRouter func(router fiber.Router)) {
+type GroupRoutes struct {
+	AuthGroup       fiber.Router
+	UserGroup       fiber.Router
+	TournamentGroup fiber.Router
+}
+
+func GetGroupRoutes(app *fiber.App) GroupRoutes {
 
 	api := app.Group("/api")
 
@@ -20,9 +23,13 @@ func SetupRoutes(app *fiber.App,
 		return ctx.Redirect("/api/docs/")
 	})
 
-	api.Route("/auth", authRouter)
+	authGroup := api.Group("/auth")
+	userGroup := api.Group("/user")
+	tournamentGroup := api.Group("/tournament")
 
-	api.Route("/tournament", tournamentRouter)
-
-	api.Route("/user", userRouter)
+	return GroupRoutes{
+		AuthGroup:       authGroup,
+		UserGroup:       userGroup,
+		TournamentGroup: tournamentGroup,
+	}
 }

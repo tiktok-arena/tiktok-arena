@@ -284,31 +284,6 @@ paths:
       summary: Tournament details
       tags:
       - tournament
-    put:
-      consumes:
-      - application/json
-      description: Increment wins and increment times_played
-      parameters:
-      - description: Data to update tournament winner
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.TournamentWinner'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Winner updated
-          schema:
-            $ref: '#/definitions/dtos.MessageResponseType'
-        "400":
-          description: Error during winner updating
-          schema:
-            $ref: '#/definitions/dtos.MessageResponseType'
-      summary: Update tournament winner statistics
-      tags:
-      - tournament
   /tournament/contests:
     get:
       consumes:
@@ -519,4 +494,30 @@ paths:
       summary: Get tournaments for user
       tags:
       - user
+  /winner/tournament:
+    put:
+      consumes:
+      - application/json
+      description: Increment wins and increment times_played
+      parameters:
+      - description: Data to update tournament winner
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.TournamentWinner'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Winner updated
+          schema:
+            $ref: '#/definitions/dtos.MessageResponseType'
+        "400":
+          description: Error during winner updating
+          schema:
+            $ref: '#/definitions/dtos.MessageResponseType'
+      summary: Update tournament winner statistics
+      tags:
+      - tournament
 swagger: "2.0"
