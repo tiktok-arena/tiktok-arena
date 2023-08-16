@@ -28,8 +28,12 @@ func (r *TiktokRepository) CreateNewTiktoks(t []models.Tiktok) error {
 
 func (r *TiktokRepository) EditTiktok(t models.Tiktok) error {
 	record := r.db.
-		Where(&t.URL, &t.TournamentID).
-		Updates(&t)
+		Model(&models.Tiktok{}).
+		Where("tournament_id = ? AND url = ?", t.TournamentID, t.URL).
+		Updates(map[string]interface{}{
+			"name": t.Name,
+			"wins": t.Wins,
+		})
 	return record.Error
 }
 

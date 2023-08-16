@@ -10,6 +10,6 @@ type Tournament struct {
 	Size        int       `gorm:"not null"`
 	TimesPlayed int       `gorm:"not null"`
 	UserID      uuid.UUID `gorm:"not null"`
-	User        *User     `gorm:"foreignKey:UserID"`
+	User        User      `gorm:"foreignKey:UserID"`
 	PhotoURL    string
 }

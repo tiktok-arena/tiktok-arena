@@ -28,7 +28,7 @@ func NewUserController(userService UserService) *UserController {
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
-//	@Security		ApiKeyAuth
+//	@Security		JWT
 //	@Param			page		query		string						false	"page number"
 //	@Param			count		query		string						false	"page size"
 //	@Param			sort_name	query		string						false	"sort page by name"
@@ -36,7 +36,7 @@ func NewUserController(userService UserService) *UserController {
 //	@Param			search		query		string						false	"search"
 //	@Success		200			{object}	dtos.TournamentsResponse	"Tournaments of user"
 //	@Failure		400			{object}	dtos.MessageResponseType	"Couldn't get tournaments for specific user"
-//	@Router			/user/tournaments [get]
+//	@Router			/api/user/tournaments [get]
 func (cr *UserController) TournamentsOfUser(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	userId, err := validator.GetUserIdAndCheckJWT(user)
@@ -64,11 +64,11 @@ func (cr *UserController) TournamentsOfUser(c *fiber.Ctx) error {
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
-//	@Security		ApiKeyAuth
+//	@Security		JWT
 //	@Param			payload	body		dtos.ChangePhotoURL			true	"Data to change photo"
 //	@Success		200		{object}	dtos.MessageResponseType	"Photo edited"
 //	@Failure		400		{object}	dtos.MessageResponseType	"Error during photo change"
-//	@Router			/user/photo [put]
+//	@Router			/api/user/photo [put]
 func (cr *UserController) ChangeUserPhoto(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	userId, err := validator.GetUserIdAndCheckJWT(user)

@@ -10,7 +10,8 @@ import (
 )
 
 type TournamentServiceTournamentRepository interface {
-	GetTournamentById(tournamentId uuid.UUID) (models.Tournament, error)
+	GetTournamentWithUserById(tournamentId uuid.UUID) (models.Tournament, error)
+	GetAllTournamentsWithUsers(totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error)
 	CheckIfTournamentExistsByName(name string) (bool, error)
 	CheckIfNameIsTakenByOtherTournament(name string, id uuid.UUID) (bool, error)
 	CheckIfTournamentExistsById(id uuid.UUID) (bool, error)
@@ -19,7 +20,6 @@ type TournamentServiceTournamentRepository interface {
 	EditTournament(t models.Tournament) error
 	DeleteTournamentById(id uuid.UUID, userId uuid.UUID) error
 	DeleteTournamentsByIds(ids []string, userId uuid.UUID) error
-	GetTournaments(totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error)
 	TotalTournaments() (int64, error)
 	UpdateTournamentTimesPlayed(tournamentId uuid.UUID) error
 }
@@ -34,14 +34,47 @@ type TournamentServiceTiktokRepository interface {
 	UpdateTiktokWins(tournamentId uuid.UUID, tiktokURL string) error
 }
 
+type TournamentServiceUserRepository interface {
+	GetUserByID(id uuid.UUID) (user models.User, err error)
+}
+
 type TournamentService struct {
 	TournamentRepository TournamentServiceTournamentRepository
 	TiktokRepository     TournamentServiceTiktokRepository
+	UserRepository       TournamentServiceUserRepository
 }
 
 func NewTournamentService(tournamentRepository TournamentServiceTournamentRepository,
-	tiktokRepository TournamentServiceTiktokRepository) *TournamentService {
-	return &TournamentService{TournamentRepository: tournamentRepository, TiktokRepository: tiktokRepository}
+	tiktokRepository TournamentServiceTiktokRepository,
+	userRepository TournamentServiceUserRepository) *TournamentService {
+	return &TournamentService{TournamentRepository: tournamentRepository, TiktokRepository: tiktokRepository, UserRepository: userRepository}
+}
+
+func (s *TournamentService) GetTournaments(queries dtos.PaginationQueries) (response dtos.TournamentsResponse, err error) {
+	countTournaments, err := s.TournamentRepository.TotalTournaments()
+	if err != nil {
+		return response, RepositoryError{err}
+	}
+	response, err = s.TournamentRepository.GetAllTournamentsWithUsers(countTournaments, queries)
+	if err != nil {
+		return response, RepositoryError{err}
+	}
+	return
+}
+
+func (s *TournamentService) GetTournament(tournamentIdString string) (tournament models.Tournament, err error) {
+	if tournamentIdString == "" {
+		return tournament, EmptyTournamentIdError{}
+	}
+	tournamentIdUUID, err := uuid.Parse(tournamentIdString)
+	if err != nil {
+		return tournament, UUIDError{err}
+	}
+	tournament, err = s.TournamentRepository.GetTournamentWithUserById(tournamentIdUUID)
+	if err != nil {
+		return tournament, RepositoryError{err}
+	}
+	return
 }
 
 func (s *TournamentService) CreateTournament(create dtos.CreateTournament, userId uuid.UUID) error {
@@ -246,33 +279,6 @@ func (s *TournamentService) DeleteTournaments(userId uuid.UUID, tournamentIds dt
 		return RepositoryError{err}
 	}
 	return nil
-}
-
-func (s *TournamentService) GetAllTournaments(queries dtos.PaginationQueries) (response dtos.TournamentsResponse, err error) {
-	countTournaments, err := s.TournamentRepository.TotalTournaments()
-	if err != nil {
-		return response, RepositoryError{err}
-	}
-	response, err = s.TournamentRepository.GetTournaments(countTournaments, queries)
-	if err != nil {
-		return response, RepositoryError{err}
-	}
-	return
-}
-
-func (s *TournamentService) GetTournament(tournamentIdString string) (tournament models.Tournament, err error) {
-	if tournamentIdString == "" {
-		return tournament, EmptyTournamentIdError{}
-	}
-	tournamentIdUUID, err := uuid.Parse(tournamentIdString)
-	if err != nil {
-		return tournament, UUIDError{err}
-	}
-	tournament, err = s.TournamentRepository.GetTournamentById(tournamentIdUUID)
-	if err != nil {
-		return tournament, RepositoryError{err}
-	}
-	return
 }
 
 func (s *TournamentService) GetTournamentStats(tournamentIdString string) (tournamentStats dtos.TournamentStats, err error) {

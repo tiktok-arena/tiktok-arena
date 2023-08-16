@@ -33,7 +33,7 @@ func (r *UserRepository) UserExists(username string) (bool, error) {
 	return user.ID != uuid.Nil, record.Error
 }
 
-func (r *UserRepository) CreateUser(newUser models.User) error {
+func (r *UserRepository) CreateUser(newUser *models.User) error {
 	record := r.db.
 		Create(&newUser)
 	return record.Error
@@ -55,4 +55,12 @@ func (r *UserRepository) GetUserPhoto(id string) (string, error) {
 		Select("photo_url").
 		Find(&url)
 	return url, record.Error
+}
+
+func (r *UserRepository) GetUserByID(id uuid.UUID) (user models.User, err error) {
+	err = r.db.
+		Model(&models.User{}).
+		Where("id = ?", id).
+		Find(&user).Error
+	return
 }

@@ -6,6 +6,13 @@ import (
 	"tiktok-arena/internal/api/app"
 )
 
+//	@title						TikTok arena API
+//	@version					1.0
+//	@description				API for TikTok arena application
+//	@securityDefinitions.apikey	JWT
+//	@in							header
+//	@name						Authorization
+//	@BasePath					/api/
 func main() {
 	err := configuration.LoadConfig(".env")
 	if err != nil {

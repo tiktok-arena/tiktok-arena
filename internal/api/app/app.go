@@ -14,11 +14,6 @@ import (
 	"tiktok-arena/internal/data/repository"
 )
 
-//	@title			TikTok arena API
-//	@version		1.0
-//	@description	API for TikTok arena application
-//	@host			tiktok-arena.onrender.com
-//	@BasePath		/api
 func Run(c *configuration.EnvConfigModel) {
 	// Create connection to DB
 	db := database.ConnectDB(c)
@@ -31,7 +26,7 @@ func Run(c *configuration.EnvConfigModel) {
 	// Create service layer
 	userService := services.NewUserService(userRepository, tournamentRepository)
 	authService := services.NewAuthService(userRepository)
-	tournamentService := services.NewTournamentService(tournamentRepository, tiktokRepository)
+	tournamentService := services.NewTournamentService(tournamentRepository, tiktokRepository, userRepository)
 
 	// Create controller layer
 	authController := controllers.NewAuthController(authService)
@@ -41,10 +36,7 @@ func Run(c *configuration.EnvConfigModel) {
 	// Create routers for unprotected and protected routes
 	authRouter := routers.NewAuthRouter(authController)
 	tournamentRouter := routers.NewTournamentRouter(tournamentController)
-
-	authProtectedRouter := routers.NewAuthProtectedRouter(authController)
-	userProtectedRouter := routers.NewUserProtectedRouter(userController)
-	tournamentProtectedRouter := routers.NewTournamentProtectedRouter(tournamentController)
+	userRouter := routers.NewUserRouter(userController)
 
 	// ErrorHandler middleware
 	app := fiber.New(fiber.Config{ErrorHandler: middleware.ErrorHandler})
@@ -63,15 +55,8 @@ func Run(c *configuration.EnvConfigModel) {
 
 	// Setup unprotected routes
 	authRouter(groupRoutes.AuthGroup)
+	userRouter(groupRoutes.UserGroup)
 	tournamentRouter(groupRoutes.TournamentGroup)
-
-	// Setup JWT middleware
-	app.Use(middleware.Protected())
-
-	// Setup protected routes
-	authProtectedRouter(groupRoutes.AuthGroup)
-	userProtectedRouter(groupRoutes.UserGroup)
-	tournamentProtectedRouter(groupRoutes.TournamentGroup)
 
 	log.Fatal(app.Listen(":8000"))
 }

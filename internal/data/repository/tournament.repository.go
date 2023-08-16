@@ -16,11 +16,22 @@ func NewTournamentRepository(db *gorm.DB) *TournamentRepository {
 	return &TournamentRepository{db: db}
 }
 
-func (r *TournamentRepository) GetTournamentById(tournamentId uuid.UUID) (models.Tournament, error) {
+func (r *TournamentRepository) GetTournamentWithUserById(tournamentId uuid.UUID) (models.Tournament, error) {
 	var tournament *models.Tournament
 	record := r.db.
+		Preload("User").
 		First(&tournament, "id = ?", tournamentId)
 	return *tournament, record.Error
+}
+
+func (r *TournamentRepository) GetAllTournamentsWithUsers(totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error) {
+	var tournaments []models.Tournament
+	record := r.db.
+		Preload("User").
+		Scopes(scopes.Search(queries.SearchText)).
+		Scopes(scopes.Paginate(queries.Page, queries.Count)).
+		Find(&tournaments)
+	return dtos.TournamentsResponse{TournamentCount: totalTournaments, Tournaments: tournaments}, record.Error
 }
 
 func (r *TournamentRepository) CheckIfTournamentExistsByName(name string) (bool, error) {
@@ -89,18 +100,10 @@ func (r *TournamentRepository) DeleteTournamentsByIds(ids []string, userId uuid.
 	return record.Error
 }
 
-func (r *TournamentRepository) GetTournaments(totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error) {
+func (r *TournamentRepository) GetAllTournamentsWithUsersForUserById(id uuid.UUID, totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error) {
 	var tournaments []models.Tournament
 	record := r.db.
-		Scopes(scopes.Search(queries.SearchText)).
-		Scopes(scopes.Paginate(queries.Page, queries.Count)).
-		Find(&tournaments)
-	return dtos.TournamentsResponse{TournamentCount: totalTournaments, Tournaments: tournaments}, record.Error
-}
-
-func (r *TournamentRepository) GetAllTournamentsForUserById(id uuid.UUID, totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error) {
-	var tournaments []models.Tournament
-	record := r.db.
+		Preload("User").
 		Where("user_id = ?", id).
 		Scopes(scopes.Search(queries.SearchText)).
 		Scopes(scopes.Paginate(queries.Page, queries.Count)).

@@ -14,7 +14,7 @@ import (
 type AuthServiceUserRepository interface {
 	GetUserByName(username string) (models.User, error)
 	UserExists(username string) (bool, error)
-	CreateUser(newUser models.User) error
+	CreateUser(newUser *models.User) error
 	GetUserPhoto(id string) (string, error)
 }
 
@@ -47,7 +47,7 @@ func (s *AuthService) NewUser(auth dtos.AuthInput) (details dtos.RegisterDetails
 		Name:     auth.Name,
 		Password: string(hashedPassword),
 	}
-	err = s.UserRepository.CreateUser(newUser)
+	err = s.UserRepository.CreateUser(&newUser)
 	if err != nil {
 		return details, RepositoryError{err}
 	}

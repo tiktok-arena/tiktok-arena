@@ -8,7 +8,7 @@ import (
 
 type UserServiceTournamentRepository interface {
 	TotalTournamentsByUserId(id uuid.UUID) (int64, error)
-	GetAllTournamentsForUserById(id uuid.UUID, totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error)
+	GetAllTournamentsWithUsersForUserById(id uuid.UUID, totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error)
 }
 
 type UserServiceUserRepository interface {
@@ -29,7 +29,7 @@ func (s *UserService) TournamentsOfUser(id uuid.UUID, queries dtos.PaginationQue
 	if err != nil {
 		return response, RepositoryError{err}
 	}
-	response, err = s.TournamentRepository.GetAllTournamentsForUserById(id, countTournamentsForUser, queries)
+	response, err = s.TournamentRepository.GetAllTournamentsWithUsersForUserById(id, countTournamentsForUser, queries)
 	if err != nil {
 		return response, RepositoryError{err}
 	}
