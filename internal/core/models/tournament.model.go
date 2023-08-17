@@ -11,5 +11,6 @@ type Tournament struct {
 	TimesPlayed int       `gorm:"not null"`
 	UserID      uuid.UUID `gorm:"not null"`
 	User        User      `gorm:"foreignKey:UserID"`
+	IsPrivate   bool      `gorm:"not null;default:false"`
 	PhotoURL    string
 }

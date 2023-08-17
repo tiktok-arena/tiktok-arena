@@ -28,6 +28,7 @@ func (r *TournamentRepository) GetAllTournamentsWithUsers(totalTournaments int64
 	var tournaments []models.Tournament
 	record := r.db.
 		Preload("User").
+		Scopes(scopes.Private(false)).
 		Scopes(scopes.Search(queries.SearchText)).
 		Scopes(scopes.Paginate(queries.Page, queries.Count)).
 		Find(&tournaments)
@@ -100,29 +101,32 @@ func (r *TournamentRepository) DeleteTournamentsByIds(ids []string, userId uuid.
 	return record.Error
 }
 
-func (r *TournamentRepository) GetAllTournamentsWithUsersForUserById(id uuid.UUID, totalTournaments int64, queries dtos.PaginationQueries) (dtos.TournamentsResponse, error) {
-	var tournaments []models.Tournament
+func (r *TournamentRepository) GetTournamentsByUserID(id uuid.UUID, totalTournaments int64, queries dtos.PaginationQueries, isPrivate bool) (dtos.TournamentsResponseWithUser, error) {
+	var tournaments []dtos.TournamentWithoutUser
 	record := r.db.
-		Preload("User").
+		Model(models.Tournament{}).
 		Where("user_id = ?", id).
+		Scopes(scopes.Private(isPrivate)).
 		Scopes(scopes.Search(queries.SearchText)).
 		Scopes(scopes.Paginate(queries.Page, queries.Count)).
 		Find(&tournaments)
-	return dtos.TournamentsResponse{TournamentCount: totalTournaments, Tournaments: tournaments}, record.Error
+	return dtos.TournamentsResponseWithUser{TournamentCount: totalTournaments, Tournaments: tournaments}, record.Error
 }
 
-func (r *TournamentRepository) TotalTournaments() (int64, error) {
+func (r *TournamentRepository) TotalTournaments(isPrivate bool) (int64, error) {
 	var totalTournaments int64
 	record := r.db.
 		Model(&models.Tournament{}).
+		Scopes(scopes.Private(isPrivate)).
 		Count(&totalTournaments)
 	return totalTournaments, record.Error
 }
 
-func (r *TournamentRepository) TotalTournamentsByUserId(id uuid.UUID) (int64, error) {
+func (r *TournamentRepository) TotalTournamentsByUserId(id uuid.UUID, isPrivate bool) (int64, error) {
 	var totalTournaments int64
 	record := r.db.
 		Model(&models.Tournament{}).
+		Scopes(scopes.Private(isPrivate)).
 		Where("user_id = ?", id).
 		Count(&totalTournaments)
 	return totalTournaments, record.Error

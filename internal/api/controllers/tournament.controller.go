@@ -136,7 +136,7 @@ func (cr *TournamentController) DeleteTournament(c *fiber.Ctx) error {
 //	@Param			payload	body		dtos.TournamentIds			true	"Data to delete tournaments"
 //	@Success		200		{object}	dtos.MessageResponseType	"Tournaments deleted"
 //	@Failure		400		{object}	dtos.MessageResponseType	"Error during tournaments deletion"
-//	@Router			/api/tournament/delete/{tournamentId} [delete]
+//	@Router			/api/tournament/delete [delete]
 func (cr *TournamentController) DeleteTournaments(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	userId, err := validator.GetUserIdAndCheckJWT(user)
@@ -170,7 +170,7 @@ func (cr *TournamentController) DeleteTournaments(c *fiber.Ctx) error {
 //	@Param			search								query		string						false	"search"
 //	@Success		200									{array}		dtos.TournamentsResponse	"All tournaments"
 //	@Failure		400									{object}	dtos.MessageResponseType	"Failed to get all tournaments"
-//	@Router			/api/tournament/tournaments [get]																																																																																																																																																																																																																																																																																																																																																																																																																				[get]
+//	@Router			/api/tournament/tournaments [get]																																																																																																																																																																																																																																																																																																																																																																																																																																																												[get]
 func (cr *TournamentController) GetAllTournaments(c *fiber.Ctx) error {
 	q := new(dtos.PaginationQueries)
 	if err := c.QueryParser(q); err != nil {

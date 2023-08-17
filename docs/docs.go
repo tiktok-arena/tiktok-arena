@@ -218,7 +218,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/tournament/delete/{tournamentId}": {
+        "/api/tournament/delete": {
             "delete": {
                 "security": [
                     {
@@ -256,6 +256,40 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Error during tournaments deletion",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/tournament/delete/{tournamentId}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete tournament for current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "Delete tournament",
+                "responses": {
+                    "200": {
+                        "description": "Tournament deleted",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    },
+                    "400": {
+                        "description": "Error during tournament deletion",
                         "schema": {
                             "$ref": "#/definitions/dtos.MessageResponseType"
                         }
@@ -531,14 +565,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user/tournaments": {
+        "/api/user/profile/{userId}": {
             "get": {
                 "security": [
                     {
                         "JWT": []
                     }
                 ],
-                "description": "Get tournaments for user",
+                "description": "Get user information (tournaments, photo and etc.)",
                 "consumes": [
                     "application/json"
                 ],
@@ -548,8 +582,15 @@ const docTemplate = `{
                 "tags": [
                     "user"
                 ],
-                "summary": "Get tournaments for user",
+                "summary": "Get user information",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User id",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "page number",
@@ -583,13 +624,13 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Tournaments of user",
+                        "description": "User information",
                         "schema": {
-                            "$ref": "#/definitions/dtos.TournamentsResponse"
+                            "$ref": "#/definitions/dtos.TournamentsResponseWithUser"
                         }
                     },
                     "400": {
-                        "description": "Couldn't get tournaments for specific user",
+                        "description": "Couldn't user information for specific user",
                         "schema": {
                             "$ref": "#/definitions/dtos.MessageResponseType"
                         }
@@ -657,11 +698,15 @@ const docTemplate = `{
         "dtos.CreateTournament": {
             "type": "object",
             "required": [
+                "isPrivate",
                 "name",
                 "photoURL",
                 "tiktoks"
             ],
             "properties": {
+                "isPrivate": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -684,11 +729,15 @@ const docTemplate = `{
         "dtos.EditTournament": {
             "type": "object",
             "required": [
+                "isPrivate",
                 "name",
                 "photoURL",
                 "tiktoks"
             ],
             "properties": {
+                "isPrivate": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -779,6 +828,29 @@ const docTemplate = `{
                 }
             }
         },
+        "dtos.TournamentWithoutUser": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "isPrivate": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "photoURL": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "timesPlayed": {
+                    "type": "integer"
+                }
+            }
+        },
         "dtos.TournamentsResponse": {
             "type": "object",
             "required": [
@@ -794,6 +866,28 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.Tournament"
                     }
+                }
+            }
+        },
+        "dtos.TournamentsResponseWithUser": {
+            "type": "object",
+            "required": [
+                "tournamentCount",
+                "tournaments",
+                "user"
+            ],
+            "properties": {
+                "tournamentCount": {
+                    "type": "integer"
+                },
+                "tournaments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.TournamentWithoutUser"
+                    }
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
                 }
             }
         },
@@ -839,6 +933,9 @@ const docTemplate = `{
             "properties": {
                 "id": {
                     "type": "string"
+                },
+                "isPrivate": {
+                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"

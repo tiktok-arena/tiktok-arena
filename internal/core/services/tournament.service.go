@@ -20,7 +20,7 @@ type TournamentServiceTournamentRepository interface {
 	EditTournament(t models.Tournament) error
 	DeleteTournamentById(id uuid.UUID, userId uuid.UUID) error
 	DeleteTournamentsByIds(ids []string, userId uuid.UUID) error
-	TotalTournaments() (int64, error)
+	TotalTournaments(isPrivate bool) (int64, error)
 	UpdateTournamentTimesPlayed(tournamentId uuid.UUID) error
 }
 
@@ -51,7 +51,7 @@ func NewTournamentService(tournamentRepository TournamentServiceTournamentReposi
 }
 
 func (s *TournamentService) GetTournaments(queries dtos.PaginationQueries) (response dtos.TournamentsResponse, err error) {
-	countTournaments, err := s.TournamentRepository.TotalTournaments()
+	countTournaments, err := s.TournamentRepository.TotalTournaments(false)
 	if err != nil {
 		return response, RepositoryError{err}
 	}
@@ -101,11 +101,12 @@ func (s *TournamentService) CreateTournament(create dtos.CreateTournament, userI
 	}
 
 	newTournament := models.Tournament{
-		ID:       newTournamentId,
-		Name:     create.Name,
-		UserID:   userId,
-		Size:     create.Size,
-		PhotoURL: create.PhotoURL,
+		ID:        newTournamentId,
+		Name:      create.Name,
+		UserID:    userId,
+		Size:      create.Size,
+		PhotoURL:  create.PhotoURL,
+		IsPrivate: create.IsPrivate,
 	}
 	err = s.TournamentRepository.CreateNewTournament(newTournament)
 	if err != nil {
@@ -171,11 +172,12 @@ func (s *TournamentService) EditTournament(edit dtos.EditTournament, userId uuid
 	}
 
 	editedTournament := models.Tournament{
-		ID:       tournamentIdUUID,
-		Name:     edit.Name,
-		UserID:   userId,
-		Size:     edit.Size,
-		PhotoURL: edit.PhotoURL,
+		ID:        tournamentIdUUID,
+		Name:      edit.Name,
+		UserID:    userId,
+		Size:      edit.Size,
+		PhotoURL:  edit.PhotoURL,
+		IsPrivate: edit.IsPrivate,
 	}
 
 	err = s.TournamentRepository.EditTournament(editedTournament)

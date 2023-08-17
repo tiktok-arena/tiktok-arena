@@ -9,7 +9,7 @@ import (
 )
 
 type UserService interface {
-	TournamentsOfUser(id uuid.UUID, queries dtos.PaginationQueries) (response dtos.TournamentsResponse, err error)
+	TournamentsOfUser(id uuid.UUID, queries dtos.PaginationQueries, hasAccessToPrivate bool) (response dtos.TournamentsResponseWithUser, err error)
 	ChangeUserPhoto(change dtos.ChangePhotoURL, userId uuid.UUID) (err error)
 }
 
@@ -21,35 +21,44 @@ func NewUserController(userService UserService) *UserController {
 	return &UserController{UserService: userService}
 }
 
-// TournamentsOfUser
+// UserInformation
 //
-//	@Summary		Get tournaments for user
-//	@Description	Get tournaments for user
+//	@Summary		Get user information
+//	@Description	Get user information (tournaments, photo and etc.)
 //	@Tags			user
 //	@Accept			json
 //	@Produce		json
 //	@Security		JWT
-//	@Param			page		query		string						false	"page number"
-//	@Param			count		query		string						false	"page size"
-//	@Param			sort_name	query		string						false	"sort page by name"
-//	@Param			sort_size	query		string						false	"sort page by size"
-//	@Param			search		query		string						false	"search"
-//	@Success		200			{object}	dtos.TournamentsResponse	"Tournaments of user"
-//	@Failure		400			{object}	dtos.MessageResponseType	"Couldn't get tournaments for specific user"
-//	@Router			/api/user/tournaments [get]
-func (cr *UserController) TournamentsOfUser(c *fiber.Ctx) error {
-	user := c.Locals("user")
-	userId, err := validator.GetUserIdAndCheckJWT(user)
+//	@Param			userId		path		string								true	"User id"
+//	@Param			page		query		string								false	"page number"
+//	@Param			count		query		string								false	"page size"
+//	@Param			sort_name	query		string								false	"sort page by name"
+//	@Param			sort_size	query		string								false	"sort page by size"
+//	@Param			search		query		string								false	"search"
+//	@Success		200			{object}	dtos.TournamentsResponseWithUser	"User information"
+//	@Failure		400			{object}	dtos.MessageResponseType			"Couldn't user information for specific user"
+//	@Router			/api/user/profile/{userId} [get]
+func (cr *UserController) UserInformation(c *fiber.Ctx) error {
+	var hasAccessToPrivate bool
+	userIdStringFromPath := c.Params("userId")
+	userIdFromPath, err := uuid.Parse(userIdStringFromPath)
 	if err != nil {
 		return err
 	}
+
+	user := c.Locals("user")
+	userId, _ := validator.GetUserIdAndCheckJWT(user) // All errors are emitted because JWT is OPTIONAL
+	if userId == userIdFromPath {
+		hasAccessToPrivate = true
+	}
+
 	payload := new(dtos.PaginationQueries)
 	if err = c.QueryParser(payload); err != nil {
 		return err
 	}
 	dtos.ValidatePaginationQueries(payload)
 
-	tournamentsResponse, err := cr.UserService.TournamentsOfUser(userId, *payload)
+	tournamentsResponse, err := cr.UserService.TournamentsOfUser(userIdFromPath, *payload, hasAccessToPrivate)
 	if err != nil {
 		return err
 	}

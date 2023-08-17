@@ -9,6 +9,6 @@ import (
 func NewUserRouter(c *controllers.UserController) func(router fiber.Router) {
 	return func(router fiber.Router) {
 		router.Put("/photo", middleware.Protected(), c.ChangeUserPhoto)
-		router.Get("/tournaments", middleware.Protected(), c.TournamentsOfUser)
+		router.Get("/profile/:userId", c.UserInformation)
 	}
 }
