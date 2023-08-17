@@ -13,6 +13,24 @@ func Protected() func(*fiber.Ctx) error {
 	})
 }
 
+func OptionalJWT() func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		token := c.Get("Authorization")
+
+		if token == "" {
+			// No JWT provided, continue without authentication
+			return c.Next()
+		}
+
+		// Validate and process the JWT if provided
+		return jwtware.New(jwtware.Config{
+			SigningKey:   []byte(configuration.EnvConfig.JwtSecret),
+			ErrorHandler: jwtError,
+		})(c)
+
+	}
+}
+
 func jwtError(c *fiber.Ctx, err error) error {
 	if err.Error() == "Missing or malformed JWT" {
 		c.Status(fiber.StatusBadRequest)
