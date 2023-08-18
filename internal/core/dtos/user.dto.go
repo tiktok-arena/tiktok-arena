@@ -1,6 +1,14 @@
 package dtos
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"tiktok-arena/internal/core/models"
+)ше
+
+type UsersResponse struct {
+	UserCount int64         `validate:"required"`
+	Users     []models.User `validate:"required"`
+}
 
 type ChangePhotoURL struct {
 	PhotoURL string `validate:"required"`

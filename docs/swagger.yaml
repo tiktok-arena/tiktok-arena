@@ -167,6 +167,18 @@ definitions:
     - tournaments
     - user
     type: object
+  dtos.UsersResponse:
+    properties:
+      userCount:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+    required:
+    - userCount
+    - users
+    type: object
   dtos.WhoAmI:
     properties:
       id:
@@ -624,6 +636,40 @@ paths:
       security:
       - JWT: []
       summary: Get user information
+      tags:
+      - user
+  /api/user/users:
+    get:
+      consumes:
+      - application/json
+      description: Get all users
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: string
+      - description: page size
+        in: query
+        name: count
+        type: string
+      - description: search
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: All users
+          schema:
+            items:
+              $ref: '#/definitions/dtos.UsersResponse'
+            type: array
+        "400":
+          description: Failed to get all users
+          schema:
+            $ref: '#/definitions/dtos.MessageResponseType'
+      summary: All users
       tags:
       - user
 securityDefinitions:

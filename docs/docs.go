@@ -637,6 +637,58 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/user/users": {
+            "get": {
+                "description": "Get all users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "All users",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page size",
+                        "name": "count",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "All users",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dtos.UsersResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to get all users",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -888,6 +940,24 @@ const docTemplate = `{
                 },
                 "user": {
                     "$ref": "#/definitions/models.User"
+                }
+            }
+        },
+        "dtos.UsersResponse": {
+            "type": "object",
+            "required": [
+                "userCount",
+                "users"
+            ],
+            "properties": {
+                "userCount": {
+                    "type": "integer"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.User"
+                    }
                 }
             }
         },

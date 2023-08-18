@@ -9,6 +9,7 @@ import (
 )
 
 type UserService interface {
+	GetUsers(queries dtos.PaginationQueries) (response dtos.UsersResponse, err error)
 	TournamentsOfUser(id uuid.UUID, queries dtos.PaginationQueries, hasAccessToPrivate bool) (response dtos.TournamentsResponseWithUser, err error)
 	ChangeUserPhoto(change dtos.ChangePhotoURL, userId uuid.UUID) (err error)
 }
@@ -19,6 +20,32 @@ type UserController struct {
 
 func NewUserController(userService UserService) *UserController {
 	return &UserController{UserService: userService}
+}
+
+// GetAllUsers
+//
+//	@Summary		All users
+//	@Description	Get all users
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param			page					query		string						false	"page number"
+//	@Param			count					query		string						false	"page size"
+//	@Param			search					query		string						false	"search"
+//	@Success		200						{array}		dtos.UsersResponse			"All users"
+//	@Failure		400						{object}	dtos.MessageResponseType	"Failed to get all users"
+//	@Router			/api/user/users [get]																																																																																																																																																																																																																																																																																																																																																																																																																																																																				[get]
+func (cr *UserController) GetAllUsers(c *fiber.Ctx) error {
+	q := new(dtos.PaginationQueries)
+	if err := c.QueryParser(q); err != nil {
+		return err
+	}
+	dtos.ValidatePaginationQueries(q)
+	userResponse, err := cr.UserService.GetUsers(*q)
+	if err != nil {
+		return err
+	}
+	return c.Status(fiber.StatusOK).JSON(userResponse)
 }
 
 // UserInformation

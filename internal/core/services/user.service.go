@@ -15,6 +15,8 @@ type UserServiceTournamentRepository interface {
 type UserServiceUserRepository interface {
 	ChangeUserPhoto(url string, id uuid.UUID) error
 	GetUserByID(id uuid.UUID) (user models.User, err error)
+	TotalUsers() (int64, error)
+	GetAllUsers(totalUsers int64, queries dtos.PaginationQueries) (dtos.UsersResponse, error)
 }
 
 type UserService struct {
@@ -24,6 +26,18 @@ type UserService struct {
 
 func NewUserService(userRepository UserServiceUserRepository, tournamentRepository UserServiceTournamentRepository) *UserService {
 	return &UserService{UserRepository: userRepository, TournamentRepository: tournamentRepository}
+}
+
+func (s *UserService) GetUsers(queries dtos.PaginationQueries) (response dtos.UsersResponse, err error) {
+	countUsers, err := s.UserRepository.TotalUsers()
+	if err != nil {
+		return response, RepositoryError{err}
+	}
+	response, err = s.UserRepository.GetAllUsers(countUsers, queries)
+	if err != nil {
+		return response, RepositoryError{err}
+	}
+	return
 }
 
 func (s *UserService) TournamentsOfUser(id uuid.UUID, queries dtos.PaginationQueries, hasAccessToPrivate bool) (response dtos.TournamentsResponseWithUser, err error) {
