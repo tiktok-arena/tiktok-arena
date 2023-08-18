@@ -14,7 +14,7 @@ func NewTiktokRepository(db *gorm.DB) *TiktokRepository {
 	return &TiktokRepository{db: db}
 }
 
-func (r *TiktokRepository) CreateNewTiktok(newTiktok *models.Tiktok) error {
+func (r *TiktokRepository) CreateNewTiktok(newTiktok models.Tiktok) error {
 	record := r.db.
 		Create(&newTiktok)
 	return record.Error
@@ -26,14 +26,18 @@ func (r *TiktokRepository) CreateNewTiktoks(t []models.Tiktok) error {
 	return record.Error
 }
 
-func (r *TiktokRepository) EditTiktok(t *models.Tiktok) error {
+func (r *TiktokRepository) EditTiktok(t models.Tiktok) error {
 	record := r.db.
-		Where(&t.URL, &t.TournamentID).
-		Updates(&t)
+		Model(&models.Tiktok{}).
+		Where("tournament_id = ? AND url = ?", t.TournamentID, t.URL).
+		Updates(map[string]interface{}{
+			"name": t.Name,
+			"wins": t.Wins,
+		})
 	return record.Error
 }
 
-func (r *TiktokRepository) DeleteTiktoks(t *[]models.Tiktok) error {
+func (r *TiktokRepository) DeleteTiktoks(t []models.Tiktok) error {
 	record := r.db.Delete(t)
 	return record.Error
 }
@@ -45,8 +49,8 @@ func (r *TiktokRepository) DeleteTiktoksByIds(ids []string) error {
 	return record.Error
 }
 
-func (r *TiktokRepository) GetTournamentTiktoksById(tournamentId uuid.UUID) (*[]models.Tiktok, error) {
-	var tiktoks *[]models.Tiktok
+func (r *TiktokRepository) GetTournamentTiktoksById(tournamentId uuid.UUID) ([]models.Tiktok, error) {
+	var tiktoks []models.Tiktok
 	record := r.db.
 		Select("*").
 		Find(&tiktoks, "tournament_id = ?", tournamentId)

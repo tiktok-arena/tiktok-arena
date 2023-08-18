@@ -14,31 +14,31 @@ import (
 	"tiktok-arena/internal/data/repository"
 )
 
-//	@title			TikTok arena API
-//	@version		1.0
-//	@description	API for TikTok arena application
-//	@host			tiktok-arena.onrender.com
-//	@BasePath		/api
 func Run(c *configuration.EnvConfigModel) {
-
+	// Create connection to DB
 	db := database.ConnectDB(c)
 
+	// Create repositories to access DB
 	userRepository := repository.NewUserRepository(db)
 	tiktokRepository := repository.NewTiktokRepository(db)
 	tournamentRepository := repository.NewTournamentRepository(db)
 
+	// Create service layer
 	userService := services.NewUserService(userRepository, tournamentRepository)
 	authService := services.NewAuthService(userRepository)
-	tournamentService := services.NewTournamentService(tournamentRepository, tiktokRepository)
+	tournamentService := services.NewTournamentService(tournamentRepository, tiktokRepository, userRepository)
 
+	// Create controller layer
 	authController := controllers.NewAuthController(authService)
 	userController := controllers.NewUserController(userService)
 	tournamentController := controllers.NewTournamentController(tournamentService)
 
+	// Create routers for unprotected and protected routes
 	authRouter := routers.NewAuthRouter(authController)
-	userRouter := routers.NewUserRouter(userController)
 	tournamentRouter := routers.NewTournamentRouter(tournamentController)
+	userRouter := routers.NewUserRouter(userController)
 
+	// ErrorHandler middleware
 	app := fiber.New(fiber.Config{ErrorHandler: middleware.ErrorHandler})
 
 	//	Logger middleware for logging HTTP request/response details
@@ -50,7 +50,13 @@ func Run(c *configuration.EnvConfigModel) {
 		AllowHeaders: "*",
 	}))
 
-	routers.SetupRoutes(app, tournamentRouter, authRouter, userRouter)
+	// Get group routes
+	groupRoutes := routers.GetGroupRoutes(app)
+
+	// Setup unprotected routes
+	authRouter(groupRoutes.AuthGroup)
+	userRouter(groupRoutes.UserGroup)
+	tournamentRouter(groupRoutes.TournamentGroup)
 
 	log.Fatal(app.Listen(":8000"))
 }

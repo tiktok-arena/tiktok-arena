@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/login": {
+        "/api/auth/login": {
             "post": {
                 "description": "Login user with given credentials",
                 "consumes": [
@@ -55,7 +55,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/register": {
+        "/api/auth/register": {
             "post": {
                 "description": "Register new user with given credentials",
                 "consumes": [
@@ -95,11 +95,11 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/whoami": {
+        "/api/auth/whoami": {
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "JWT": []
                     }
                 ],
                 "description": "Get current user id and name",
@@ -129,88 +129,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/tournament": {
-            "get": {
-                "description": "Get tournament details by its id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tournament"
-                ],
-                "summary": "Tournament details",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Tournament id",
-                        "name": "tournamentId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Tournament",
-                        "schema": {
-                            "$ref": "#/definitions/models.Tournament"
-                        }
-                    },
-                    "400": {
-                        "description": "Tournament not found",
-                        "schema": {
-                            "$ref": "#/definitions/dtos.MessageResponseType"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Increment wins and increment times_played",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tournament"
-                ],
-                "summary": "Update tournament winner statistics",
-                "parameters": [
-                    {
-                        "description": "Data to update tournament winner",
-                        "name": "payload",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dtos.CreateTournament"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Winner updated",
-                        "schema": {
-                            "$ref": "#/definitions/dtos.MessageResponseType"
-                        }
-                    },
-                    "400": {
-                        "description": "Error during winner updating",
-                        "schema": {
-                            "$ref": "#/definitions/dtos.MessageResponseType"
-                        }
-                    }
-                }
-            }
-        },
-        "/tournament/contests": {
+        "/api/tournament/contest/{tournamentId}": {
             "get": {
                 "description": "Get tournament contests",
                 "consumes": [
@@ -254,11 +173,11 @@ const docTemplate = `{
                 }
             }
         },
-        "/tournament/create": {
+        "/api/tournament/create": {
             "post": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "JWT": []
                     }
                 ],
                 "description": "Create new tournament for current user",
@@ -299,11 +218,11 @@ const docTemplate = `{
                 }
             }
         },
-        "/tournament/delete": {
+        "/api/tournament/delete": {
             "delete": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "JWT": []
                     }
                 ],
                 "description": "Delete tournaments for current user",
@@ -344,11 +263,83 @@ const docTemplate = `{
                 }
             }
         },
-        "/tournament/edit": {
-            "put": {
+        "/api/tournament/delete/{tournamentId}": {
+            "delete": {
                 "security": [
                     {
                         "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete tournament for current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "Delete tournament",
+                "responses": {
+                    "200": {
+                        "description": "Tournament deleted",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    },
+                    "400": {
+                        "description": "Error during tournament deletion",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/tournament/details/{tournamentId}": {
+            "get": {
+                "description": "Get tournament details by its id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "Tournament details",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament id",
+                        "name": "tournamentId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tournament",
+                        "schema": {
+                            "$ref": "#/definitions/models.Tournament"
+                        }
+                    },
+                    "400": {
+                        "description": "Tournament not found",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/tournament/edit": {
+            "put": {
+                "security": [
+                    {
+                        "JWT": []
                     }
                 ],
                 "description": "Edit tournament for current user",
@@ -389,7 +380,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/tournament/tiktoks": {
+        "/api/tournament/tiktoks/{tournamentId}": {
             "get": {
                 "description": "Get tournament tiktoks",
                 "consumes": [
@@ -430,11 +421,110 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/photo": {
+        "/api/tournament/tournaments": {
+            "get": {
+                "description": "Get all tournaments",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "All tournaments",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page size",
+                        "name": "count",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "All tournaments",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dtos.TournamentsResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to get all tournaments",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/tournament/winner/{tournamentId}": {
+            "put": {
+                "description": "Increment wins and increment times_played",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tournament"
+                ],
+                "summary": "Update tournament winner statistics",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament id",
+                        "name": "tournamentId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Data to update tournament winner",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.TournamentWinner"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Winner updated",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    },
+                    "400": {
+                        "description": "Error during winner updating",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/photo": {
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "JWT": []
                     }
                 ],
                 "description": "Change user photo for current user",
@@ -475,14 +565,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/tournaments": {
+        "/api/user/profile/{userId}": {
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "JWT": []
                     }
                 ],
-                "description": "Get tournaments for user",
+                "description": "Get user information (tournaments, photo and etc.)",
                 "consumes": [
                     "application/json"
                 ],
@@ -492,8 +582,15 @@ const docTemplate = `{
                 "tags": [
                     "user"
                 ],
-                "summary": "Get tournaments for user",
+                "summary": "Get user information",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User id",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "page number",
@@ -527,13 +624,65 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Tournaments of user",
+                        "description": "User information",
                         "schema": {
-                            "$ref": "#/definitions/dtos.TournamentsResponse"
+                            "$ref": "#/definitions/dtos.TournamentsResponseWithUser"
                         }
                     },
                     "400": {
-                        "description": "Couldn't get tournaments for specific user",
+                        "description": "Couldn't user information for specific user",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.MessageResponseType"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/users": {
+            "get": {
+                "description": "Get all users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "All users",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page size",
+                        "name": "count",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "search",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "All users",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dtos.UsersResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to get all users",
                         "schema": {
                             "$ref": "#/definitions/dtos.MessageResponseType"
                         }
@@ -601,11 +750,15 @@ const docTemplate = `{
         "dtos.CreateTournament": {
             "type": "object",
             "required": [
+                "isPrivate",
                 "name",
                 "photoURL",
                 "tiktoks"
             ],
             "properties": {
+                "isPrivate": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -628,11 +781,15 @@ const docTemplate = `{
         "dtos.EditTournament": {
             "type": "object",
             "required": [
+                "isPrivate",
                 "name",
                 "photoURL",
                 "tiktoks"
             ],
             "properties": {
+                "isPrivate": {
+                    "type": "boolean"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -676,10 +833,10 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "token": {
+                "name": {
                     "type": "string"
                 },
-                "username": {
+                "token": {
                     "type": "string"
                 }
             }
@@ -712,6 +869,40 @@ const docTemplate = `{
                 }
             }
         },
+        "dtos.TournamentWinner": {
+            "type": "object",
+            "required": [
+                "tiktokURL"
+            ],
+            "properties": {
+                "tiktokURL": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.TournamentWithoutUser": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "isPrivate": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "photoURL": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "timesPlayed": {
+                    "type": "integer"
+                }
+            }
+        },
         "dtos.TournamentsResponse": {
             "type": "object",
             "required": [
@@ -730,19 +921,59 @@ const docTemplate = `{
                 }
             }
         },
+        "dtos.TournamentsResponseWithUser": {
+            "type": "object",
+            "required": [
+                "tournamentCount",
+                "tournaments",
+                "user"
+            ],
+            "properties": {
+                "tournamentCount": {
+                    "type": "integer"
+                },
+                "tournaments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.TournamentWithoutUser"
+                    }
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                }
+            }
+        },
+        "dtos.UsersResponse": {
+            "type": "object",
+            "required": [
+                "userCount",
+                "users"
+            ],
+            "properties": {
+                "userCount": {
+                    "type": "integer"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.User"
+                    }
+                }
+            }
+        },
         "dtos.WhoAmI": {
             "type": "object",
             "properties": {
                 "id": {
                     "type": "string"
                 },
+                "name": {
+                    "type": "string"
+                },
                 "photoURL": {
                     "type": "string"
                 },
                 "token": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             }
@@ -772,6 +1003,9 @@ const docTemplate = `{
             "properties": {
                 "id": {
                     "type": "string"
+                },
+                "isPrivate": {
+                    "type": "boolean"
                 },
                 "name": {
                     "type": "string"
@@ -810,14 +1044,21 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "JWT": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "tiktok-arena.onrender.com",
-	BasePath:         "/api",
+	Host:             "",
+	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "TikTok arena API",
 	Description:      "API for TikTok arena application",

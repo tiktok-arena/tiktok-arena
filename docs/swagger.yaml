@@ -1,4 +1,3 @@
-basePath: /api
 definitions:
   dtos.AuthInput:
     properties:
@@ -38,6 +37,8 @@ definitions:
     type: object
   dtos.CreateTournament:
     properties:
+      isPrivate:
+        type: boolean
       name:
         type: string
       photoURL:
@@ -51,12 +52,15 @@ definitions:
           $ref: '#/definitions/dtos.CreateTiktok'
         type: array
     required:
+    - isPrivate
     - name
     - photoURL
     - tiktoks
     type: object
   dtos.EditTournament:
     properties:
+      isPrivate:
+        type: boolean
       name:
         type: string
       photoURL:
@@ -70,6 +74,7 @@ definitions:
           $ref: '#/definitions/dtos.CreateTiktok'
         type: array
     required:
+    - isPrivate
     - name
     - photoURL
     - tiktoks
@@ -90,9 +95,9 @@ definitions:
     properties:
       id:
         type: string
-      token:
+      name:
         type: string
-      username:
+      token:
         type: string
     type: object
   dtos.Round:
@@ -113,6 +118,28 @@ definitions:
     required:
     - tournamentIds
     type: object
+  dtos.TournamentWinner:
+    properties:
+      tiktokURL:
+        type: string
+    required:
+    - tiktokURL
+    type: object
+  dtos.TournamentWithoutUser:
+    properties:
+      id:
+        type: string
+      isPrivate:
+        type: boolean
+      name:
+        type: string
+      photoURL:
+        type: string
+      size:
+        type: integer
+      timesPlayed:
+        type: integer
+    type: object
   dtos.TournamentsResponse:
     properties:
       tournamentCount:
@@ -125,15 +152,42 @@ definitions:
     - tournamentCount
     - tournaments
     type: object
+  dtos.TournamentsResponseWithUser:
+    properties:
+      tournamentCount:
+        type: integer
+      tournaments:
+        items:
+          $ref: '#/definitions/dtos.TournamentWithoutUser'
+        type: array
+      user:
+        $ref: '#/definitions/models.User'
+    required:
+    - tournamentCount
+    - tournaments
+    - user
+    type: object
+  dtos.UsersResponse:
+    properties:
+      userCount:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+    required:
+    - userCount
+    - users
+    type: object
   dtos.WhoAmI:
     properties:
       id:
         type: string
+      name:
+        type: string
       photoURL:
         type: string
       token:
-        type: string
-      username:
         type: string
     type: object
   models.Tiktok:
@@ -153,6 +207,8 @@ definitions:
     properties:
       id:
         type: string
+      isPrivate:
+        type: boolean
       name:
         type: string
       photoURL:
@@ -177,14 +233,13 @@ definitions:
       photoURL:
         type: string
     type: object
-host: tiktok-arena.onrender.com
 info:
   contact: {}
   description: API for TikTok arena application
   title: TikTok arena API
   version: "1.0"
 paths:
-  /auth/login:
+  /api/auth/login:
     post:
       consumes:
       - application/json
@@ -210,7 +265,7 @@ paths:
       summary: Login user
       tags:
       - auth
-  /auth/register:
+  /api/auth/register:
     post:
       consumes:
       - application/json
@@ -236,7 +291,7 @@ paths:
       summary: Register user
       tags:
       - auth
-  /auth/whoami:
+  /api/auth/whoami:
     get:
       consumes:
       - application/json
@@ -253,63 +308,11 @@ paths:
           schema:
             $ref: '#/definitions/dtos.MessageResponseType'
       security:
-      - ApiKeyAuth: []
+      - JWT: []
       summary: Authenticated user details
       tags:
       - auth
-  /tournament:
-    get:
-      consumes:
-      - application/json
-      description: Get tournament details by its id
-      parameters:
-      - description: Tournament id
-        in: path
-        name: tournamentId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Tournament
-          schema:
-            $ref: '#/definitions/models.Tournament'
-        "400":
-          description: Tournament not found
-          schema:
-            $ref: '#/definitions/dtos.MessageResponseType'
-      summary: Tournament details
-      tags:
-      - tournament
-    put:
-      consumes:
-      - application/json
-      description: Increment wins and increment times_played
-      parameters:
-      - description: Data to update tournament winner
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.CreateTournament'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Winner updated
-          schema:
-            $ref: '#/definitions/dtos.MessageResponseType'
-        "400":
-          description: Error during winner updating
-          schema:
-            $ref: '#/definitions/dtos.MessageResponseType'
-      security:
-      - ApiKeyAuth: []
-      summary: Update tournament winner statistics
-      tags:
-      - tournament
-  /tournament/contests:
+  /api/tournament/contest/{tournamentId}:
     get:
       consumes:
       - application/json
@@ -338,7 +341,7 @@ paths:
       summary: Tournament contests
       tags:
       - tournament
-  /tournament/create:
+  /api/tournament/create:
     post:
       consumes:
       - application/json
@@ -362,11 +365,11 @@ paths:
           schema:
             $ref: '#/definitions/dtos.MessageResponseType'
       security:
-      - ApiKeyAuth: []
+      - JWT: []
       summary: Create new tournament
       tags:
       - tournament
-  /tournament/delete:
+  /api/tournament/delete:
     delete:
       consumes:
       - application/json
@@ -390,11 +393,57 @@ paths:
           schema:
             $ref: '#/definitions/dtos.MessageResponseType'
       security:
-      - ApiKeyAuth: []
+      - JWT: []
       summary: Delete tournaments
       tags:
       - tournament
-  /tournament/edit:
+  /api/tournament/delete/{tournamentId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete tournament for current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tournament deleted
+          schema:
+            $ref: '#/definitions/dtos.MessageResponseType'
+        "400":
+          description: Error during tournament deletion
+          schema:
+            $ref: '#/definitions/dtos.MessageResponseType'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete tournament
+      tags:
+      - tournament
+  /api/tournament/details/{tournamentId}:
+    get:
+      consumes:
+      - application/json
+      description: Get tournament details by its id
+      parameters:
+      - description: Tournament id
+        in: path
+        name: tournamentId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tournament
+          schema:
+            $ref: '#/definitions/models.Tournament'
+        "400":
+          description: Tournament not found
+          schema:
+            $ref: '#/definitions/dtos.MessageResponseType'
+      summary: Tournament details
+      tags:
+      - tournament
+  /api/tournament/edit:
     put:
       consumes:
       - application/json
@@ -418,11 +467,11 @@ paths:
           schema:
             $ref: '#/definitions/dtos.MessageResponseType'
       security:
-      - ApiKeyAuth: []
+      - JWT: []
       summary: Edit tournament
       tags:
       - tournament
-  /tournament/tiktoks:
+  /api/tournament/tiktoks/{tournamentId}:
     get:
       consumes:
       - application/json
@@ -449,7 +498,72 @@ paths:
       summary: Tournament tiktoks
       tags:
       - tournament
-  /user/photo:
+  /api/tournament/tournaments:
+    get:
+      consumes:
+      - application/json
+      description: Get all tournaments
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: string
+      - description: page size
+        in: query
+        name: count
+        type: string
+      - description: search
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: All tournaments
+          schema:
+            items:
+              $ref: '#/definitions/dtos.TournamentsResponse'
+            type: array
+        "400":
+          description: Failed to get all tournaments
+          schema:
+            $ref: '#/definitions/dtos.MessageResponseType'
+      summary: All tournaments
+      tags:
+      - tournament
+  /api/tournament/winner/{tournamentId}:
+    put:
+      consumes:
+      - application/json
+      description: Increment wins and increment times_played
+      parameters:
+      - description: Tournament id
+        in: path
+        name: tournamentId
+        required: true
+        type: string
+      - description: Data to update tournament winner
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.TournamentWinner'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Winner updated
+          schema:
+            $ref: '#/definitions/dtos.MessageResponseType'
+        "400":
+          description: Error during winner updating
+          schema:
+            $ref: '#/definitions/dtos.MessageResponseType'
+      summary: Update tournament winner statistics
+      tags:
+      - tournament
+  /api/user/photo:
     put:
       consumes:
       - application/json
@@ -473,16 +587,21 @@ paths:
           schema:
             $ref: '#/definitions/dtos.MessageResponseType'
       security:
-      - ApiKeyAuth: []
+      - JWT: []
       summary: Change user photo
       tags:
       - user
-  /user/tournaments:
+  /api/user/profile/{userId}:
     get:
       consumes:
       - application/json
-      description: Get tournaments for user
+      description: Get user information (tournaments, photo and etc.)
       parameters:
+      - description: User id
+        in: path
+        name: userId
+        required: true
+        type: string
       - description: page number
         in: query
         name: page
@@ -507,16 +626,55 @@ paths:
       - application/json
       responses:
         "200":
-          description: Tournaments of user
+          description: User information
           schema:
-            $ref: '#/definitions/dtos.TournamentsResponse'
+            $ref: '#/definitions/dtos.TournamentsResponseWithUser'
         "400":
-          description: Couldn't get tournaments for specific user
+          description: Couldn't user information for specific user
           schema:
             $ref: '#/definitions/dtos.MessageResponseType'
       security:
-      - ApiKeyAuth: []
-      summary: Get tournaments for user
+      - JWT: []
+      summary: Get user information
       tags:
       - user
+  /api/user/users:
+    get:
+      consumes:
+      - application/json
+      description: Get all users
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        type: string
+      - description: page size
+        in: query
+        name: count
+        type: string
+      - description: search
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: All users
+          schema:
+            items:
+              $ref: '#/definitions/dtos.UsersResponse'
+            type: array
+        "400":
+          description: Failed to get all users
+          schema:
+            $ref: '#/definitions/dtos.MessageResponseType'
+      summary: All users
+      tags:
+      - user
+securityDefinitions:
+  JWT:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

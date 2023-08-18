@@ -3,7 +3,9 @@ package repository
 import (
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"tiktok-arena/internal/core/dtos"
 	"tiktok-arena/internal/core/models"
+	"tiktok-arena/internal/data/repository/scopes"
 )
 
 type UserRepository struct {
@@ -30,7 +32,7 @@ func (r *UserRepository) UserExists(username string) (bool, error) {
 	if record.Error == gorm.ErrRecordNotFound {
 		return false, nil
 	}
-	return user.ID != nil, record.Error
+	return user.ID != uuid.Nil, record.Error
 }
 
 func (r *UserRepository) CreateUser(newUser *models.User) error {
@@ -55,4 +57,29 @@ func (r *UserRepository) GetUserPhoto(id string) (string, error) {
 		Select("photo_url").
 		Find(&url)
 	return url, record.Error
+}
+
+func (r *UserRepository) GetUserByID(id uuid.UUID) (user models.User, err error) {
+	err = r.db.
+		Model(&models.User{}).
+		Where("id = ?", id).
+		Find(&user).Error
+	return
+}
+
+func (r *UserRepository) TotalUsers() (int64, error) {
+	var totalUsers int64
+	record := r.db.
+		Model(&models.User{}).
+		Count(&totalUsers)
+	return totalUsers, record.Error
+}
+
+func (r *UserRepository) GetAllUsers(totalUsers int64, queries dtos.PaginationQueries) (dtos.UsersResponse, error) {
+	var users []models.User
+	record := r.db.
+		Scopes(scopes.Search(queries.SearchText)).
+		Scopes(scopes.Paginate(queries.Page, queries.Count)).
+		Find(&users)
+	return dtos.UsersResponse{UserCount: totalUsers, Users: users}, record.Error
 }

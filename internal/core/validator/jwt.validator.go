@@ -5,14 +5,13 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetUserIdAndCheckJWT(user interface{}) (id uuid.UUID, err error) {
+func GetUserIdAndCheckJWT(user interface{}) (uuid.UUID, error) {
 	if user == nil {
-		return id, EmptyJWTError{}
+		return uuid.UUID{}, EmptyJWTError{}
 	}
 	userJWT := user.(*jwt.Token)
 
 	claims := userJWT.Claims.(jwt.MapClaims)
 
-	id, err = uuid.Parse(claims["sub"].(string))
-	return
+	return uuid.Parse(claims["sub"].(string))
 }

@@ -7,9 +7,9 @@ import (
 )
 
 type AuthService interface {
-	NewUser(auth *dtos.AuthInput) (details dtos.RegisterDetails, err error)
-	GetUserByNameAndPassword(input *dtos.AuthInput) (details dtos.LoginDetails, err error)
-	WhoAmI(token *jwt.Token) (whoami dtos.WhoAmI, err error)
+	NewUser(auth dtos.AuthInput) (details dtos.RegisterDetails, err error)
+	GetUserByNameAndPassword(input dtos.AuthInput) (details dtos.LoginDetails, err error)
+	WhoAmI(token jwt.Token) (whoami dtos.WhoAmI, err error)
 }
 
 type AuthController struct {
@@ -27,12 +27,12 @@ func NewAuthController(authService AuthService) *AuthController {
 //	@Tags			auth
 //	@Accept			json
 //	@Produce		json
-//	@Param			payload			body		dtos.AuthInput				true	"Data to register user"
-//	@Success		200				{object}	dtos.RegisterDetails		"Register success"
-//	@Failure		400				{object}	dtos.MessageResponseType	"Failed to register user"
-//	@Router			/auth/register	[post]
+//	@Param			payload				body		dtos.AuthInput				true	"Data to register user"
+//	@Success		200					{object}	dtos.RegisterDetails		"Register success"
+//	@Failure		400					{object}	dtos.MessageResponseType	"Failed to register user"
+//	@Router			/api/auth/register	[post]
 func (cr *AuthController) RegisterUser(c *fiber.Ctx) error {
-	var payload *dtos.AuthInput
+	var payload dtos.AuthInput
 
 	err := c.BodyParser(&payload)
 	if err != nil {
@@ -54,12 +54,12 @@ func (cr *AuthController) RegisterUser(c *fiber.Ctx) error {
 //	@Tags			auth
 //	@Accept			json
 //	@Produce		json
-//	@Param			payload			body		dtos.AuthInput				true	"Data to login user"
-//	@Success		200				{object}	dtos.RegisterDetails		"Login success"
-//	@Failure		400				{object}	dtos.MessageResponseType	"Error logging in"
-//	@Router			/auth/login    	[post]
+//	@Param			payload				body		dtos.AuthInput				true	"Data to login user"
+//	@Success		200					{object}	dtos.RegisterDetails		"Login success"
+//	@Failure		400					{object}	dtos.MessageResponseType	"Error logging in"
+//	@Router			/api/auth/login    	[post]
 func (cr *AuthController) LoginUser(c *fiber.Ctx) error {
-	var payload *dtos.AuthInput
+	var payload dtos.AuthInput
 
 	err := c.BodyParser(&payload)
 	if err != nil {
@@ -81,14 +81,14 @@ func (cr *AuthController) LoginUser(c *fiber.Ctx) error {
 //	@Tags			auth
 //	@Accept			json
 //	@Produce		json
-//	@Security		ApiKeyAuth
+//	@Security		JWT
 //	@Success		200	{object}	dtos.WhoAmI					"User details"
 //	@Failure		400	{object}	dtos.MessageResponseType	"Error getting user data"
-//	@Router			/auth/whoami [get]
+//	@Router			/api/auth/whoami [get]
 func (cr *AuthController) WhoAmI(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 
-	whoami, err := cr.AuthService.WhoAmI(token)
+	whoami, err := cr.AuthService.WhoAmI(*token)
 
 	if err != nil {
 		return err

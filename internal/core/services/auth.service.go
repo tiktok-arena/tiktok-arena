@@ -26,7 +26,7 @@ func NewAuthService(userRepository AuthServiceUserRepository) *AuthService {
 	return &AuthService{UserRepository: userRepository}
 }
 
-func (s *AuthService) NewUser(auth *dtos.AuthInput) (details dtos.RegisterDetails, err error) {
+func (s *AuthService) NewUser(auth dtos.AuthInput) (details dtos.RegisterDetails, err error) {
 	err = validator.ValidateStruct(auth)
 	if err != nil {
 		return details, ValidateError{err}
@@ -52,19 +52,19 @@ func (s *AuthService) NewUser(auth *dtos.AuthInput) (details dtos.RegisterDetail
 		return details, RepositoryError{err}
 	}
 
-	token, err := UserJwtToken(*newUser.ID, newUser.Name)
+	token, err := UserJwtToken(newUser.ID, newUser.Name)
 	if err != nil {
 		return details, JWTGenerateError{err}
 	}
 
 	return dtos.RegisterDetails{
-		ID:       newUser.ID,
-		Username: newUser.Name,
-		Token:    token,
+		ID:    newUser.ID,
+		Name:  newUser.Name,
+		Token: token,
 	}, err
 }
 
-func (s *AuthService) GetUserByNameAndPassword(input *dtos.AuthInput) (details dtos.LoginDetails, err error) {
+func (s *AuthService) GetUserByNameAndPassword(input dtos.AuthInput) (details dtos.LoginDetails, err error) {
 	err = validator.ValidateStruct(input)
 	if err != nil {
 		return details, ValidateError{err}
@@ -80,7 +80,7 @@ func (s *AuthService) GetUserByNameAndPassword(input *dtos.AuthInput) (details d
 		return details, BcryptError{err}
 	}
 
-	token, err := UserJwtToken(*user.ID, user.Name)
+	token, err := UserJwtToken(user.ID, user.Name)
 
 	if err != nil {
 		return details, JWTGenerateError{err}
@@ -88,14 +88,14 @@ func (s *AuthService) GetUserByNameAndPassword(input *dtos.AuthInput) (details d
 
 	return dtos.LoginDetails{
 		ID:       user.ID,
-		Username: user.Name,
+		Name:     user.Name,
 		Token:    token,
 		PhotoURL: user.PhotoURL,
 	}, err
 
 }
 
-func (s *AuthService) WhoAmI(token *jwt.Token) (whoami dtos.WhoAmI, err error) {
+func (s *AuthService) WhoAmI(token jwt.Token) (whoami dtos.WhoAmI, err error) {
 	claims := token.Claims.(jwt.MapClaims)
 
 	username := claims["name"].(string)
@@ -114,7 +114,7 @@ func (s *AuthService) WhoAmI(token *jwt.Token) (whoami dtos.WhoAmI, err error) {
 	}
 	return dtos.WhoAmI{
 		ID:       id,
-		Username: username,
+		Name:     username,
 		Token:    token.Raw,
 		PhotoURL: url,
 	}, err

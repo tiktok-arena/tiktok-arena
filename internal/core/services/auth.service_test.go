@@ -131,7 +131,7 @@ func (as *AuthSuite) TestGetUsernameAndPassword() {
 }
 
 // func (as *AuthSuite) TestWhoAmI() {
-// 	newUser := dtos.WhoAmI{Username: "test"}
+// 	newUser := dtos.WhoAmI{Name: "test"}
 // 	id, err := uuid.NewUUID()
 // 	if err != nil {
 // 		assert.Error(as.T(), err)
@@ -140,12 +140,12 @@ func (as *AuthSuite) TestGetUsernameAndPassword() {
 // 	if err != nil {
 // 		assert.Error(as.T(), err)
 // 	}
-// 	rows := sqlmock.NewRows([]string{"id", "name", "password"}).AddRow(id, newUser.Username, string(hashedPassword))
+// 	rows := sqlmock.NewRows([]string{"id", "name", "password"}).AddRow(id, newUser.Name, string(hashedPassword))
 // 	as.mock.ExpectQuery(regexp.QuoteMeta(`SELECT "id" FROM "users" WHERE name = $1 ORDER BY "users"."id" LIMIT 1`)).
-// 		WithArgs(newUser.Username).
+// 		WithArgs(newUser.Name).
 // 		WillReturnRows(rows)
 // 	as.mock.ExpectBegin()
-// 	rows = sqlmock.NewRows([]string{"id", "name", "password"}).AddRow(id, newUser.Username, string(hashedPassword))
+// 	rows = sqlmock.NewRows([]string{"id", "name", "password"}).AddRow(id, newUser.Name, string(hashedPassword))
 // 	as.mock.ExpectQuery(regexp.QuoteMeta(`SELECT "photo_url" FROM "users" WHERE "users"."id" = $1`)).
 // 		WithArgs(id).
 // 		WillReturnRows(rows)
@@ -167,6 +167,6 @@ func (as *AuthSuite) TestGetUsernameAndPassword() {
 // 	}
 // 	bodyBytes, _ := io.ReadAll(resp.Body)
 // 	assert.Equal(as.T(), resp.StatusCode, fiber.StatusOK)
-// 	assert.Contains(as.T(), string(bodyBytes), newUser.Username)
+// 	assert.Contains(as.T(), string(bodyBytes), newUser.Name)
 // 	assert.Nil(as.T(), err)
 // }

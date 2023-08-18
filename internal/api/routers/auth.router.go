@@ -10,6 +10,7 @@ func NewAuthRouter(c *controllers.AuthController) func(router fiber.Router) {
 	return func(router fiber.Router) {
 		router.Post("/register", c.RegisterUser)
 		router.Post("/login", c.LoginUser)
+
 		router.Get("/whoami", middleware.Protected(), c.WhoAmI)
 	}
 }
