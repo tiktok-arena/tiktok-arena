@@ -58,9 +58,9 @@ func (s *AuthService) NewUser(auth dtos.AuthInput) (details dtos.RegisterDetails
 	}
 
 	return dtos.RegisterDetails{
-		ID:       newUser.ID,
-		Username: newUser.Name,
-		Token:    token,
+		ID:    newUser.ID,
+		Name:  newUser.Name,
+		Token: token,
 	}, err
 }
 
@@ -88,7 +88,7 @@ func (s *AuthService) GetUserByNameAndPassword(input dtos.AuthInput) (details dt
 
 	return dtos.LoginDetails{
 		ID:       user.ID,
-		Username: user.Name,
+		Name:     user.Name,
 		Token:    token,
 		PhotoURL: user.PhotoURL,
 	}, err
@@ -114,7 +114,7 @@ func (s *AuthService) WhoAmI(token jwt.Token) (whoami dtos.WhoAmI, err error) {
 	}
 	return dtos.WhoAmI{
 		ID:       id,
-		Username: username,
+		Name:     username,
 		Token:    token.Raw,
 		PhotoURL: url,
 	}, err

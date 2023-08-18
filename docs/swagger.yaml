@@ -95,9 +95,9 @@ definitions:
     properties:
       id:
         type: string
-      token:
+      name:
         type: string
-      username:
+      token:
         type: string
     type: object
   dtos.Round:
@@ -183,11 +183,11 @@ definitions:
     properties:
       id:
         type: string
+      name:
+        type: string
       photoURL:
         type: string
       token:
-        type: string
-      username:
         type: string
     type: object
   models.Tiktok:
@@ -435,7 +435,7 @@ paths:
         "200":
           description: Tournament
           schema:
-            $ref: '#/definitions/dtos.TournamentsResponse'
+            $ref: '#/definitions/models.Tournament'
         "400":
           description: Tournament not found
           schema:

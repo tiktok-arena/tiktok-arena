@@ -3,7 +3,7 @@ package dtos
 import (
 	"github.com/google/uuid"
 	"tiktok-arena/internal/core/models"
-)ше
+)
 
 type UsersResponse struct {
 	UserCount int64         `validate:"required"`
@@ -20,21 +20,21 @@ type AuthInput struct {
 }
 
 type RegisterDetails struct {
-	ID       uuid.UUID
-	Username string
-	Token    string
+	ID    uuid.UUID
+	Name  string
+	Token string
 }
 
 type LoginDetails struct {
 	ID       uuid.UUID
-	Username string
+	Name     string
 	Token    string
 	PhotoURL string
 }
 
 type WhoAmI struct {
 	ID       string
-	Username string
+	Name     string
 	Token    string
 	PhotoURL string
 }

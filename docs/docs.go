@@ -323,7 +323,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Tournament",
                         "schema": {
-                            "$ref": "#/definitions/dtos.TournamentsResponse"
+                            "$ref": "#/definitions/models.Tournament"
                         }
                     },
                     "400": {
@@ -833,10 +833,10 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "token": {
+                "name": {
                     "type": "string"
                 },
-                "username": {
+                "token": {
                     "type": "string"
                 }
             }
@@ -967,13 +967,13 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "name": {
+                    "type": "string"
+                },
                 "photoURL": {
                     "type": "string"
                 },
                 "token": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             }

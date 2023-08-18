@@ -315,7 +315,7 @@
                     "200": {
                         "description": "Tournament",
                         "schema": {
-                            "$ref": "#/definitions/dtos.TournamentsResponse"
+                            "$ref": "#/definitions/models.Tournament"
                         }
                     },
                     "400": {
@@ -825,10 +825,10 @@
                 "id": {
                     "type": "string"
                 },
-                "token": {
+                "name": {
                     "type": "string"
                 },
-                "username": {
+                "token": {
                     "type": "string"
                 }
             }
@@ -959,13 +959,13 @@
                 "id": {
                     "type": "string"
                 },
+                "name": {
+                    "type": "string"
+                },
                 "photoURL": {
                     "type": "string"
                 },
                 "token": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             }
