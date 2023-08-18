@@ -22,7 +22,7 @@ func Paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
 
 func Private(isPrivate bool) func(db *gorm.DB) *gorm.DB {
 	// Return all entries when has access
-	if isPrivate == true {
+	if isPrivate {
 		return func(db *gorm.DB) *gorm.DB {
 			return db
 		}
