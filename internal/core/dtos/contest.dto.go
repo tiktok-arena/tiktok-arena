@@ -17,19 +17,19 @@ func CheckIfAllowedContestType(contestType string) bool {
 }
 
 type Contest struct {
-	CountMatches int
-	Rounds       []Round
+	CountMatches int     `json:"countMatches"`
+	Rounds       []Round `json:"rounds"`
 }
 
 type Round struct {
-	Round   int
-	Matches []Match
+	Round   int     `json:"round"`
+	Matches []Match `json:"matches"`
 }
 
 type Match struct {
-	MatchID      string
-	FirstOption  Option
-	SecondOption Option
+	MatchID      string `json:"matchID"`
+	FirstOption  Option `json:"firstOption"`
+	SecondOption Option `json:"secondOption"`
 }
 
 type Option interface {
@@ -37,7 +37,7 @@ type Option interface {
 }
 
 type MatchOption struct {
-	MatchID string
+	MatchID string `json:"matchID"`
 }
 
 func (m MatchOption) isOption() bool {
@@ -45,7 +45,7 @@ func (m MatchOption) isOption() bool {
 }
 
 type TiktokOption struct {
-	TiktokURL string
+	TiktokURL string `json:"tiktokURL"`
 }
 
 func (m TiktokOption) isOption() bool {
@@ -53,5 +53,5 @@ func (m TiktokOption) isOption() bool {
 }
 
 type ContestPayload struct {
-	Type string `validate:"required"`
+	Type string `validate:"required" json:"type"`
 }

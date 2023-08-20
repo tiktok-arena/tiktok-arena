@@ -1,9 +1,9 @@
 package dtos
 
 type PaginationQueries struct {
-	Page       int    `query:"page"`
-	Count      int    `query:"count"`
-	SearchText string `query:"search"`
+	Page       int    `query:"page" json:"page"`
+	Count      int    `query:"count" json:"count"`
+	SearchText string `query:"search" json:"searchText"`
 }
 
 func ValidatePaginationQueries(queries *PaginationQueries) {

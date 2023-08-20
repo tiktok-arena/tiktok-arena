@@ -6,35 +6,35 @@ import (
 )
 
 type UsersResponse struct {
-	UserCount int64         `validate:"required"`
-	Users     []models.User `validate:"required"`
+	UserCount int64         `validate:"required" json:"userCount"`
+	Users     []models.User `validate:"required" json:"users"`
 }
 
 type ChangePhotoURL struct {
-	PhotoURL string `validate:"required"`
+	PhotoURL string `validate:"required" json:"photoURL"`
 }
 
 type AuthInput struct {
-	Name     string `validate:"required"`
-	Password string `validate:"required"`
+	Name     string `validate:"required" json:"name"`
+	Password string `validate:"required" json:"password"`
 }
 
 type RegisterDetails struct {
-	ID    uuid.UUID
-	Name  string
-	Token string
+	ID    uuid.UUID `json:"id" json:"id"`
+	Name  string    `json:"name" json:"name"`
+	Token string    `json:"token" json:"token"`
 }
 
 type LoginDetails struct {
-	ID       uuid.UUID
-	Name     string
-	Token    string
-	PhotoURL string
+	ID       uuid.UUID `json:"id"`
+	Name     string    `json:"name"`
+	Token    string    `json:"token"`
+	PhotoURL string    `json:"photoURL"`
 }
 
 type WhoAmI struct {
-	ID       string
-	Name     string
-	Token    string
-	PhotoURL string
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Token    string `json:"token"`
+	PhotoURL string `json:"photoURL"`
 }
