@@ -20,9 +20,9 @@ type AuthInput struct {
 }
 
 type RegisterDetails struct {
-	ID    uuid.UUID `json:"id" json:"id"`
-	Name  string    `json:"name" json:"name"`
-	Token string    `json:"token" json:"token"`
+	ID    uuid.UUID `json:"id"`
+	Name  string    `json:"name"`
+	Token string    `json:"token"`
 }
 
 type LoginDetails struct {
