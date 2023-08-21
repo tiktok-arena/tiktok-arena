@@ -1,5 +1,5 @@
 package dtos
 
 type MessageResponseType struct {
-	Message string
+	Message string `json:"message"`
 }

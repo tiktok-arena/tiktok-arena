@@ -7,11 +7,11 @@ import (
 )
 
 type Tiktok struct {
-	TournamentID uuid.UUID  `gorm:"not null;primaryKey;default:null"`
-	Tournament   Tournament `gorm:"foreignKey:TournamentID"`
-	Name         string     `gorm:"not null;default:null"`
-	URL          string     `gorm:"not null;primaryKey;default:null"`
-	Wins         int
+	TournamentID uuid.UUID  `gorm:"not null;primaryKey;default:null" json:"tournamentID"`
+	Tournament   Tournament `gorm:"foreignKey:TournamentID" json:"tournament"`
+	Name         string     `gorm:"not null;default:null" json:"name"`
+	URL          string     `gorm:"not null;primaryKey;default:null" json:"url"`
+	Wins         int        `json:"wins"`
 }
 
 func FindDifferenceOfTwoTiktokSlices(s1 []Tiktok, s2 []Tiktok) []Tiktok {
