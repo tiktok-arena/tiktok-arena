@@ -34,7 +34,7 @@ func NewUserController(userService UserService) *UserController {
 //	@Param			search					query		string						false	"search"
 //	@Success		200						{array}		dtos.UsersResponse			"All users"
 //	@Failure		400						{object}	dtos.MessageResponseType	"Failed to get all users"
-//	@Router			/api/user/users [get]																																																																																																																																																																																																																																																																																																																																																																																																																																																																																				[get]
+//	@Router			/api/user/users [get]																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																												[get]
 func (cr *UserController) GetAllUsers(c *fiber.Ctx) error {
 	q := new(dtos.PaginationQueries)
 	if err := c.QueryParser(q); err != nil {

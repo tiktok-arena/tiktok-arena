@@ -335,7 +335,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/tournament/edit": {
+        "/api/tournament/edit/{tournamentId}": {
             "put": {
                 "security": [
                     {
@@ -354,6 +354,13 @@ const docTemplate = `{
                 ],
                 "summary": "Edit tournament",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tournament id",
+                        "name": "tournamentId",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "description": "Data to edit tournament",
                         "name": "payload",
