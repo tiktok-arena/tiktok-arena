@@ -29,7 +29,7 @@ type CreateTournament struct {
 	PhotoURL  string         `validate:"required" json:"photoURL"`
 	Size      int            `validate:"gte=4,lte=64" json:"size"`
 	Tiktoks   []CreateTiktok `validate:"required" json:"tiktoks"`
-	IsPrivate bool           `validate:"required" json:"isPrivate"`
+	IsPrivate bool           `json:"isPrivate"` // by default public, so we don't need this field to be required
 }
 
 type EditTournament struct {
@@ -37,7 +37,7 @@ type EditTournament struct {
 	PhotoURL  string         `validate:"required" json:"photoURL"`
 	Size      int            `validate:"gte=4,lte=64" json:"size"`
 	Tiktoks   []CreateTiktok `validate:"required" json:"tiktoks"`
-	IsPrivate bool           `validate:"required" json:"isPrivate"`
+	IsPrivate bool           `json:"isPrivate"` // by default public, so we don't need this field to be required
 }
 
 type TournamentWithoutUser struct {

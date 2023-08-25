@@ -71,10 +71,11 @@ func (cr *TournamentController) CreateTournament(c *fiber.Ctx) error {
 //	@Accept			json
 //	@Produce		json
 //	@Security		JWT
-//	@Param			payload	body		dtos.EditTournament			true	"Data to edit tournament"
-//	@Success		200		{object}	dtos.MessageResponseType	"Tournament edited"
-//	@Failure		400		{object}	dtos.MessageResponseType	"Error during tournament edition"
-//	@Router			/api/tournament/edit [put]
+//	@Param			tournamentId	path		string						true	"Tournament id"
+//	@Param			payload			body		dtos.EditTournament			true	"Data to edit tournament"
+//	@Success		200				{object}	dtos.MessageResponseType	"Tournament edited"
+//	@Failure		400				{object}	dtos.MessageResponseType	"Error during tournament edition"
+//	@Router			/api/tournament/edit/{tournamentId} [put]
 func (cr *TournamentController) EditTournament(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	userId, err := validator.GetUserIdAndCheckJWT(user)
@@ -170,7 +171,7 @@ func (cr *TournamentController) DeleteTournaments(c *fiber.Ctx) error {
 //	@Param			search								query		string						false	"search"
 //	@Success		200									{array}		dtos.TournamentsResponse	"All tournaments"
 //	@Failure		400									{object}	dtos.MessageResponseType	"Failed to get all tournaments"
-//	@Router			/api/tournament/tournaments [get]																																																																																																																																																																																																																																																																																																																																																																																																																																																																																				[get]
+//	@Router			/api/tournament/tournaments [get]																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																												[get]
 func (cr *TournamentController) GetAllTournaments(c *fiber.Ctx) error {
 	q := new(dtos.PaginationQueries)
 	if err := c.QueryParser(q); err != nil {

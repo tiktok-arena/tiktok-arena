@@ -443,12 +443,17 @@ paths:
       summary: Tournament details
       tags:
       - tournament
-  /api/tournament/edit:
+  /api/tournament/edit/{tournamentId}:
     put:
       consumes:
       - application/json
       description: Edit tournament for current user
       parameters:
+      - description: Tournament id
+        in: path
+        name: tournamentId
+        required: true
+        type: string
       - description: Data to edit tournament
         in: body
         name: payload
